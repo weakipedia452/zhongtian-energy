@@ -1,10 +1,22 @@
 'use client';
 
 import { useI18n } from '@/contexts/i18n-context';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle, ArrowRight, Building2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+interface CustomerInfo {
+  name: string;
+  nameEn: string;
+  description: string;
+  descriptionEn: string;
+  logoUrl?: string;
+  website?: string;
+}
 
 export function QualitySection() {
   const { t, locale } = useI18n();
+  const [customers, setCustomers] = useState<CustomerInfo[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const processSteps = [
     t('quality.process.1'),
@@ -14,6 +26,77 @@ export function QualitySection() {
     t('quality.process.5'),
     t('quality.process.6'),
   ];
+
+  // 默认客户信息（搜索失败时的兜底数据）
+  const defaultCustomers: CustomerInfo[] = [
+    {
+      name: '江西彩虹光伏有限公司',
+      nameEn: 'Jiangxi Rainbow Photovoltaic Co., Ltd.',
+      description: '中国电子信息产业集团（CEC）旗下光伏玻璃制造企业，专注于光伏玻璃的研发、生产和销售，为太阳能光伏行业提供高品质玻璃产品。',
+      descriptionEn: 'A photovoltaic glass manufacturer under China Electronics Corporation (CEC), specializing in R&D, production and sales of photovoltaic glass for the solar industry.',
+      website: 'https://www.rainbow-pv.com',
+    },
+    {
+      name: '信义玻璃（印尼）有限公司',
+      nameEn: 'Xinyi Glass (Indonesia) Co., Ltd.',
+      description: '信义玻璃控股有限公司在印尼设立的生产基地，是全球领先的大型玻璃制造商之一，产品涵盖浮法玻璃、汽车玻璃、建筑玻璃等。',
+      descriptionEn: 'Indonesian production base of Xinyi Glass Holdings, one of the world\'s leading large-scale glass manufacturers, producing float glass, automotive glass, and architectural glass.',
+      website: 'https://www.xinyiglass.com',
+    },
+  ];
+
+  useEffect(() => {
+    // 尝试搜索客户信息
+    const fetchCustomerInfo = async () => {
+      setLoading(true);
+      try {
+        const [rainbowRes, xinyiRes] = await Promise.all([
+          fetch('/api/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: '江西彩虹光伏有限公司 光伏玻璃', count: 3 }),
+          }),
+          fetch('/api/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: '信义玻璃印尼 Xinyi Glass Indonesia', count: 3 }),
+          }),
+        ]);
+
+        if (rainbowRes.ok && xinyiRes.ok) {
+          const [rainbowData, xinyiData] = await Promise.all([
+            rainbowRes.json(),
+            xinyiRes.json(),
+          ]);
+
+          // 如果有搜索结果，更新客户信息
+          if (rainbowData.results?.length > 0 || xinyiData.results?.length > 0) {
+            setCustomers([
+              {
+                ...defaultCustomers[0],
+                logoUrl: rainbowData.results?.[0]?.logoUrl,
+              },
+              {
+                ...defaultCustomers[1],
+                logoUrl: xinyiData.results?.[0]?.logoUrl,
+              },
+            ]);
+          } else {
+            setCustomers(defaultCustomers);
+          }
+        } else {
+          setCustomers(defaultCustomers);
+        }
+      } catch (error) {
+        console.error('Failed to fetch customer info:', error);
+        setCustomers(defaultCustomers);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomerInfo();
+  }, []);
 
   return (
     <section id="quality" className="py-20 lg:py-32 bg-[#f8fafc]">
@@ -195,6 +278,86 @@ export function QualitySection() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Important customers */}
+        <div className="mt-20">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-[#c9a961]/10 rounded-full mb-4">
+              <Building2 className="w-8 h-8 text-[#c9a961]" />
+            </div>
+            <h3 className="text-3xl font-bold text-[#1a365d] mb-4">
+              {locale === 'zh' ? '重要客户' : 'Key Customers'}
+            </h3>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {locale === 'zh' 
+                ? '我们的石英砂产品广泛应用于光伏玻璃、浮法玻璃等领域，服务于国内外知名玻璃制造企业' 
+                : 'Our quartz sand products are widely used in photovoltaic glass, float glass and other fields, serving well-known glass manufacturing enterprises at home and abroad'}
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="grid md:grid-cols-2 gap-8">
+              {[1, 2].map((i) => (
+                <div key={i} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 animate-pulse">
+                  <div className="h-16 bg-gray-200 rounded-lg mb-6"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-8">
+              {customers.map((customer, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#c9a961]/30 transition-all duration-300"
+                >
+                  {/* Logo and Name */}
+                  <div className="flex items-start space-x-4 mb-6">
+                    {customer.logoUrl ? (
+                      <img
+                        src={customer.logoUrl}
+                        alt={locale === 'zh' ? customer.name : customer.nameEn}
+                        className="w-16 h-16 object-contain rounded-lg bg-gray-50 p-2"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 bg-gradient-to-br from-[#1a365d] to-[#0f2847] rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Building2 className="w-8 h-8 text-[#c9a961]" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-xl font-bold text-[#1a365d] mb-1">
+                        {locale === 'zh' ? customer.name : customer.nameEn}
+                      </h4>
+                      <p className="text-sm text-gray-500">
+                        {locale === 'zh' ? customer.nameEn : customer.name}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-gray-600 leading-relaxed mb-6">
+                    {locale === 'zh' ? customer.description : customer.descriptionEn}
+                  </p>
+
+                  {/* Website Link */}
+                  {customer.website && (
+                    <a
+                      href={customer.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-[#c9a961] hover:text-[#1a365d] transition-colors font-medium"
+                    >
+                      {locale === 'zh' ? '访问官网' : 'Visit Website'}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
