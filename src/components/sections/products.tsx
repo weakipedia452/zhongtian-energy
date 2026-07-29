@@ -29,7 +29,7 @@ export function ProductsSection() {
       desc: t('products.pv.desc'),
       spec: t('products.pv.spec'),
       color: 'from-[#1a365d] to-[#0f2847]',
-      image: '/images/mine/pms_img_14_p9.png',
+      image: '/images/mine/pms_img_15_p9.jpeg',
     },
   ];
 

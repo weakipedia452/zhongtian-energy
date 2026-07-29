@@ -255,7 +255,7 @@ export function QualitySection() {
             </div>
             <div className="rounded-xl overflow-hidden shadow-md bg-white">
               <img
-                src="/images/mine/pms_img_14_p9.png"
+                src="/images/mine/pms_img_15_p9.jpeg"
                 alt="Processed Quartz Sand"
                 className="w-full h-[250px] object-cover bg-gray-100"
               />
