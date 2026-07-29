@@ -95,7 +95,7 @@ export function AboutSection() {
             </div>
             <div className="space-y-4">
               <p className="text-gray-700 leading-relaxed">
-                2018年与陕西省物流集团混合改制后出任陕西省物流集团盛久实业有限公司总经理，主导大宗商品贸易业务，年贸易额达10亿人民币。2022年起负责印尼石英砂项目的全面运营管理。
+                {t('about.gm.story')}
               </p>
             </div>
           </div>
