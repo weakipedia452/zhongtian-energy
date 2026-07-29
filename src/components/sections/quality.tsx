@@ -9,6 +9,7 @@ interface CustomerInfo {
   nameEn: string;
   description: string;
   descriptionEn: string;
+  descriptionId?: string;
   logoUrl?: string;
   website?: string;
 }
@@ -34,6 +35,7 @@ export function QualitySection() {
       nameEn: 'Jiangxi Rainbow Photovoltaic Co., Ltd.',
       description: '中国电子信息产业集团（CEC）旗下光伏玻璃制造企业，专注于光伏玻璃的研发、生产和销售，为太阳能光伏行业提供高品质玻璃产品。',
       descriptionEn: 'A photovoltaic glass manufacturer under China Electronics Corporation (CEC), specializing in R&D, production and sales of photovoltaic glass for the solar industry.',
+      descriptionId: 'Produsen kaca fotovoltaik di bawah China Electronics Corporation (CEC), spesialis dalam R&D, produksi dan penjualan kaca fotovoltaik untuk industri surya.',
       website: 'https://www.rainbow-pv.com',
     },
     {
@@ -41,6 +43,7 @@ export function QualitySection() {
       nameEn: 'Xinyi Glass (Indonesia) Co., Ltd.',
       description: '信义玻璃控股有限公司在印尼设立的生产基地，是全球领先的大型玻璃制造商之一，产品涵盖浮法玻璃、汽车玻璃、建筑玻璃等。',
       descriptionEn: 'Indonesian production base of Xinyi Glass Holdings, one of the world\'s leading large-scale glass manufacturers, producing float glass, automotive glass, and architectural glass.',
+      descriptionId: 'Basis produksi di Indonesia dari Xinyi Glass Holdings, salah satu produsen kaca skala besar terkemuka di dunia, memproduksi kaca float, kaca otomotif, dan kaca arsitektur.',
       website: 'https://www.xinyiglass.com',
     },
   ];
@@ -345,7 +348,11 @@ export function QualitySection() {
 
                   {/* Description */}
                   <p className="text-gray-600 leading-relaxed mb-6">
-                    {locale === 'zh' ? customer.description : locale === 'id' ? customer.description : customer.descriptionEn}
+                    {locale === 'zh' 
+                      ? customer.description 
+                      : locale === 'id' 
+                      ? (customer.descriptionId || customer.description)
+                      : customer.descriptionEn}
                   </p>
 
                   {/* Website Link */}
