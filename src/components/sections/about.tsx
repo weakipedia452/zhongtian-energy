@@ -111,7 +111,7 @@ export function AboutSection() {
             />
           </div>
           <p className="text-center text-gray-500 mt-4 text-sm">
-            {locale === 'zh' ? '创始人与总经理在矿区现场' : 'Founder and General Manager at the mining site'}
+            {locale === 'zh' ? '创始人与武汉理工大学任教授在矿区现场' : 'Founder and Professor Ren from Wuhan University of Technology at the mining site'}
           </p>
         </div>
 
