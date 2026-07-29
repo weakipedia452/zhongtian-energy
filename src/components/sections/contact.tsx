@@ -70,18 +70,29 @@ export function ContactSection() {
               </div>
             </div>
 
-            {/* Map placeholder */}
-            <div className="bg-[#f8fafc] rounded-2xl p-8 border border-gray-200">
-              <div className="flex items-center justify-center min-h-[200px]">
-                <div className="text-center">
-                  <MapPin className="w-12 h-12 text-[#c9a961] mx-auto mb-3" />
-                  <p className="text-[#1a365d] font-semibold">
+            {/* Google Maps */}
+            <div className="bg-[#f8fafc] rounded-2xl overflow-hidden border border-gray-200">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.2!2d106.9011!3d-6.1275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9bcc8!2sApartemen+Gading+Mediterania!5e0!3m2!1sen!2sid!4v1234567890"
+                width="100%"
+                height="300"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Jakarta Office Location"
+                className="w-full"
+              ></iframe>
+              <div className="p-4 bg-white">
+                <div className="flex items-center space-x-2">
+                  <MapPin className="w-5 h-5 text-[#c9a961]" />
+                  <p className="text-[#1a365d] font-semibold text-sm">
                     {locale === 'zh' ? '雅加达办公室' : 'Jakarta Office'}
                   </p>
-                  <p className="text-gray-500 text-sm mt-2">
-                    {locale === 'zh' ? '印度尼西亚' : 'Indonesia'}
-                  </p>
                 </div>
+                <p className="text-gray-500 text-xs mt-1 ml-7">
+                  {locale === 'zh' ? '印度尼西亚雅加达' : 'Jakarta, Indonesia'}
+                </p>
               </div>
             </div>
           </div>
