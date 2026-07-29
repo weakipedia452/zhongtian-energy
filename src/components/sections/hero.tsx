@@ -22,7 +22,7 @@ export function HeroSection() {
       {/* Background image with overlay */}
       <div className="absolute inset-0">
         <img
-          src="/images/pms_img_02_p1.jpeg"
+          src="/images/mine/pms_img_02_p1.jpeg"
           alt="Mining Area"
           className="w-full h-full object-cover"
         />
