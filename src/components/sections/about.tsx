@@ -4,7 +4,7 @@ import { useI18n } from '@/contexts/i18n-context';
 import { User, Building2, Calendar } from 'lucide-react';
 
 export function AboutSection() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const timeline = [
     { year: t('about.timeline.1980s'), desc: t('about.timeline.1980s.desc'), icon: Building2 },
@@ -38,8 +38,8 @@ export function AboutSection() {
               </div>
               <div className="rounded-2xl overflow-hidden shadow-lg">
                 <img
-                  src="/images/pms_img_11_p8.jpeg"
-                  alt="Company Overview"
+                  src="/images/mine/pms_img_04_p3.jpeg"
+                  alt="Mining Area Map"
                   className="w-full h-[300px] object-cover"
                 />
               </div>
@@ -54,7 +54,7 @@ export function AboutSection() {
             <div className="flex items-start space-x-4 mb-6">
               <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-[#1a365d]/10">
                 <img
-                  src="/images/pms_img_17_p10.jpeg"
+                  src="/images/mine/pms_img_17_p10.jpeg"
                   alt="Xianlu Wen"
                   className="w-full h-full object-cover"
                 />
@@ -79,7 +79,7 @@ export function AboutSection() {
             <div className="flex items-start space-x-4 mb-6">
               <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-[#c9a961]/20">
                 <img
-                  src="/images/pms_img_18_p10.jpeg"
+                  src="/images/mine/pms_img_18_p10.jpeg"
                   alt="Jiangxin Wen"
                   className="w-full h-full object-cover"
                 />
@@ -99,6 +99,20 @@ export function AboutSection() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Team photo */}
+        <div className="mb-20">
+          <div className="rounded-2xl overflow-hidden shadow-lg">
+            <img
+              src="/images/mine/pms_img_10_p7.jpeg"
+              alt="Team at Mining Site"
+              className="w-full h-[400px] object-cover"
+            />
+          </div>
+          <p className="text-center text-gray-500 mt-4 text-sm">
+            {locale === 'zh' ? '创始人与总经理在矿区现场' : 'Founder and General Manager at the mining site'}
+          </p>
         </div>
 
         {/* Timeline */}

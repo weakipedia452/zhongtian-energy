@@ -13,7 +13,7 @@ export function ProductsSection() {
       desc: t('products.float.desc'),
       spec: t('products.float.spec'),
       color: 'from-blue-500 to-blue-600',
-      image: '/images/pms_img_07_p6.jpeg',
+      image: '/images/mine/pms_img_07_p6.jpeg',
     },
     {
       icon: Truck,
@@ -21,7 +21,7 @@ export function ProductsSection() {
       desc: t('products.export.desc'),
       spec: t('products.export.spec'),
       color: 'from-[#c9a961] to-[#b89950]',
-      image: '/images/pms_img_08_p7.png',
+      image: '/images/mine/pms_img_06_p5.jpeg',
     },
     {
       icon: Zap,
@@ -29,7 +29,7 @@ export function ProductsSection() {
       desc: t('products.pv.desc'),
       spec: t('products.pv.spec'),
       color: 'from-[#1a365d] to-[#0f2847]',
-      image: '/images/pms_img_15_p9.jpeg',
+      image: '/images/mine/pms_img_14_p9.png',
     },
   ];
 

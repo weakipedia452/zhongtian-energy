@@ -17,16 +17,19 @@ export function MiningSection() {
       icon: MapPin,
       title: t('mining.location.title'),
       desc: t('mining.location.desc'),
+      image: '/images/mine/pms_img_04_p3.jpeg',
     },
     {
       icon: Factory,
       title: t('mining.process.title'),
       desc: t('mining.process.desc'),
+      image: '/images/mine/pms_img_12_p8.jpeg',
     },
     {
       icon: Shield,
       title: t('mining.qc.title'),
       desc: t('mining.qc.desc'),
+      image: '/images/mine/pms_img_13_p8.jpeg',
     },
   ];
 
@@ -68,11 +71,6 @@ export function MiningSection() {
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon;
-            const images = [
-              '/images/pms_img_05_p4.jpeg',
-              '/images/pms_img_13_p8.jpeg',
-              '/images/pms_img_14_p9.png',
-            ];
             return (
               <div
                 key={index}
@@ -81,7 +79,7 @@ export function MiningSection() {
                 {/* Feature Image */}
                 <div className="h-48 overflow-hidden">
                   <img
-                    src={images[index]}
+                    src={feature.image}
                     alt={feature.title}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                   />
@@ -131,9 +129,32 @@ export function MiningSection() {
             </div>
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
-                src="/images/pms_img_03_p2.jpeg"
-                alt="Mining Location"
+                src="/images/mine/pms_img_02_p1.jpeg"
+                alt="Mining Area Aerial View"
                 className="w-full h-[300px] object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Equipment gallery */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-[#1a365d] text-center mb-8">
+            {locale === 'zh' ? '矿区设备与运输' : 'Mining Equipment & Transportation'}
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="rounded-xl overflow-hidden shadow-md">
+              <img
+                src="/images/mine/pms_img_03_p2.jpeg"
+                alt="Mining Trucks"
+                className="w-full h-[250px] object-cover hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div className="rounded-xl overflow-hidden shadow-md">
+              <img
+                src="/images/mine/pms_img_11_p8.jpeg"
+                alt="Sand Stockpile"
+                className="w-full h-[250px] object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
           </div>

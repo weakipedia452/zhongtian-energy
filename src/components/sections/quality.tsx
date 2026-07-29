@@ -115,8 +115,8 @@ export function QualitySection() {
             {/* Image side */}
             <div className="relative h-64 lg:h-auto">
               <img
-                src="/images/pms_img_16_p9.jpeg"
-                alt="Quality Control"
+                src="/images/mine/pms_img_15_p9.jpeg"
+                alt="Quality Control Lab"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-[#1a365d]/50 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#1a365d]"></div>
@@ -147,6 +147,51 @@ export function QualitySection() {
                   <div className="text-3xl font-bold text-[#c9a961] mb-2">100%</div>
                   <div className="text-sm text-white/70">{locale === 'zh' ? '品质保证' : 'Quality'}</div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Product samples gallery */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-[#1a365d] text-center mb-8">
+            {locale === 'zh' ? '产品样品展示' : 'Product Samples'}
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="rounded-xl overflow-hidden shadow-md bg-white">
+              <img
+                src="/images/mine/pms_img_06_p5.jpeg"
+                alt="Quartz Sand in Hands"
+                className="w-full h-[250px] object-cover"
+              />
+              <div className="p-4">
+                <p className="text-sm text-gray-600 text-center">
+                  {locale === 'zh' ? '石英砂原料' : 'Raw Quartz Sand'}
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl overflow-hidden shadow-md bg-white">
+              <img
+                src="/images/mine/pms_img_14_p9.png"
+                alt="Processed Quartz Sand"
+                className="w-full h-[250px] object-cover bg-gray-100"
+              />
+              <div className="p-4">
+                <p className="text-sm text-gray-600 text-center">
+                  {locale === 'zh' ? '加工后石英砂' : 'Processed Quartz Sand'}
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl overflow-hidden shadow-md bg-white">
+              <img
+                src="/images/mine/pms_img_16_p9.jpeg"
+                alt="Lab Sample"
+                className="w-full h-[250px] object-cover"
+              />
+              <div className="p-4">
+                <p className="text-sm text-gray-600 text-center">
+                  {locale === 'zh' ? '实验室样品' : 'Laboratory Sample'}
+                </p>
               </div>
             </div>
           </div>
