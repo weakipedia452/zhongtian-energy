@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useI18n } from '@/contexts/i18n-context';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,14 @@ import { Textarea } from '@/components/ui/textarea';
 
 export function ContactSection() {
   const { t, locale } = useI18n();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const contactInfo = [
     {
@@ -103,56 +112,116 @@ export function ContactSection() {
             <h3 className="text-2xl font-bold text-[#1a365d] mb-8">
               {locale === 'zh' ? '发送消息' : 'Send us a Message'}
             </h3>
-            <form className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('contact.form.name')}
-                </label>
-                <Input
-                  type="text"
-                  placeholder={t('contact.form.name')}
-                  className="w-full"
-                />
+            
+            {submitStatus === 'success' ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h4 className="text-xl font-bold text-[#1a365d] mb-2">
+                  {locale === 'zh' ? '发送成功！' : 'Message Sent!'}
+                </h4>
+                <p className="text-gray-600">
+                  {locale === 'zh' ? '我们会尽快与您联系' : 'We will get back to you soon'}
+                </p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('contact.form.email')}
-                </label>
-                <Input
-                  type="email"
-                  placeholder={t('contact.form.email')}
-                  className="w-full"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('contact.form.company')}
-                </label>
-                <Input
-                  type="text"
-                  placeholder={t('contact.form.company')}
-                  className="w-full"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('contact.form.message')}
-                </label>
-                <Textarea
-                  placeholder={t('contact.form.message')}
-                  rows={5}
-                  className="w-full"
-                />
-              </div>
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full bg-[#1a365d] hover:bg-[#0f2847] text-white py-6 text-lg font-medium rounded-lg transition-all"
-              >
-                <Send className="w-5 h-5 mr-2" />
-                {t('contact.form.submit')}
-              </Button>
-            </form>
+            ) : (
+              <form className="space-y-6" onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                try {
+                  const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      type: 'contact',
+                      ...formData,
+                    }),
+                  });
+                  const data = await response.json();
+                  if (data.success) {
+                    setSubmitStatus('success');
+                    setFormData({ name: '', email: '', company: '', message: '' });
+                  } else {
+                    setSubmitStatus('error');
+                  }
+                } catch (error) {
+                  setSubmitStatus('error');
+                } finally {
+                  setIsSubmitting(false);
+                }
+              }}>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('contact.form.name')}
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder={t('contact.form.name')}
+                    className="w-full"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('contact.form.email')}
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder={t('contact.form.email')}
+                    className="w-full"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('contact.form.company')}
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder={t('contact.form.company')}
+                    className="w-full"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    {t('contact.form.message')}
+                  </label>
+                  <Textarea
+                    placeholder={t('contact.form.message')}
+                    rows={5}
+                    className="w-full"
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    required
+                  />
+                </div>
+                {submitStatus === 'error' && (
+                  <div className="text-red-600 text-sm">
+                    {locale === 'zh' ? '发送失败，请重试' : 'Failed to send, please try again'}
+                  </div>
+                )}
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#1a365d] hover:bg-[#0f2847] text-white py-6 text-lg font-medium rounded-lg transition-all disabled:opacity-50"
+                >
+                  <Send className="w-5 h-5 mr-2" />
+                  {isSubmitting 
+                    ? (locale === 'zh' ? '发送中...' : 'Sending...') 
+                    : t('contact.form.submit')}
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </div>

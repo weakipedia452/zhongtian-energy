@@ -26,7 +26,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isDev = process.env.COZE_PROJECT_ENV === 'DEV';
+  // 使用客户端检测避免 hydration 错误
+  const isDev = typeof window !== 'undefined' ? process.env.COZE_PROJECT_ENV === 'DEV' : false;
 
   return (
     <html lang="zh">

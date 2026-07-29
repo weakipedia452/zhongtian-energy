@@ -81,28 +81,24 @@ export function CareersSection() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
-    // Simulate form submission via email
     try {
-      const subject = `[简历投递] ${formData.name} - ${formData.position}`;
-      const body = `
-姓名：${formData.name}
-电话：${formData.phone}
-邮箱：${formData.email}
-应聘职位：${formData.position}
-学历：${formData.education}
-工作经验：${formData.experience}
-
-自我介绍：
-${formData.intro}
-      `.trim();
-
-      // Open email client
-      const mailtoLink = `mailto:wenjiangxin@vip.126.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailtoLink;
-
-      setSubmitStatus('success');
-      setFormData({ name: '', phone: '', email: '', position: '', education: '', experience: '', intro: '' });
-      setFileName('');
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'resume',
+          ...formData,
+          fileName,
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', phone: '', email: '', position: '', education: '', experience: '', intro: '' });
+        setFileName('');
+      } else {
+        setSubmitStatus('error');
+      }
     } catch {
       setSubmitStatus('error');
     } finally {
