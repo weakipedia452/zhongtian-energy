@@ -1,55 +1,20 @@
 import type { Metadata } from 'next';
 import { Inspector } from 'react-dev-inspector';
 import './globals.css';
+import { I18nProvider } from '@/contexts/i18n-context';
+import ReactDOM from 'react-dom';
 
 export const metadata: Metadata = {
-  title: {
-    default: '新应用 | 扣子编程',
-    template: '%s | 扣子编程',
-  },
-  description:
-    '扣子编程是一款一站式云端 Vibe Coding 开发平台。通过对话轻松构建智能体、工作流和网站，实现从创意到上线的无缝衔接。',
-  keywords: [
-    '扣子编程',
-    'Coze Code',
-    'Vibe Coding',
-    'AI 编程',
-    '智能体搭建',
-    '工作流搭建',
-    '网站搭建',
-    '网站部署',
-    '全栈开发',
-    'AI 工程师',
-  ],
-  authors: [{ name: 'Coze Code Team', url: 'https://code.coze.cn' }],
-  generator: 'Coze Code',
-  // icons: {
-  //   icon: '',
-  // },
+  title: 'PT ZHONGTIAN NEW ENERGY INDONESIA | 印尼中天新能源',
+  description: 'PT ZHONGTIAN NEW ENERGY INDONESIA - 专注印尼邦加勿里洞岛石英砂矿区开发、加工与贸易。年产能100万吨,服务全球光伏与玻璃产业。',
+  keywords: ['石英砂', '新能源', '印尼矿业', '光伏砂', '石英砂开采', 'PT ZHONGTIAN', '印尼中天'],
+  authors: [{ name: 'PT ZHONGTIAN NEW ENERGY INDONESIA' }],
   openGraph: {
-    title: '扣子编程 | 你的 AI 工程师已就位',
-    description:
-      '我正在使用扣子编程 Vibe Coding，让创意瞬间上线。告别拖拽，拥抱心流。',
-    url: 'https://code.coze.cn',
-    siteName: '扣子编程',
-    locale: 'zh_CN',
+    title: 'PT ZHONGTIAN NEW ENERGY INDONESIA | 印尼中天新能源',
+    description: '专注印尼邦加勿里洞岛石英砂矿区开发、加工与贸易',
     type: 'website',
-    // images: [
-    //   {
-    //     url: '',
-    //     width: 1200,
-    //     height: 630,
-    //     alt: '扣子编程 - 你的 AI 工程师',
-    //   },
-    // ],
+    locale: 'zh_CN',
   },
-  // twitter: {
-  //   card: 'summary_large_image',
-  //   title: 'Coze Code | Your AI Engineer is Here',
-  //   description:
-  //     'Build and deploy full-stack applications through AI conversation. No env setup, just flow.',
-  //   // images: [''],
-  // },
   robots: {
     index: true,
     follow: true,
@@ -64,11 +29,21 @@ export default function RootLayout({
   const isDev = process.env.COZE_PROJECT_ENV === 'DEV';
 
   return (
-    <html lang="en">
-      <body className={`antialiased`}>
-        {isDev && <Inspector />}
-        {children}
+    <html lang="zh">
+      <body className={`antialiased font-sans`}>
+        <FontPreload />
+        <I18nProvider>
+          {isDev && <Inspector />}
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );
+}
+
+function FontPreload() {
+  ReactDOM.preconnect('https://fonts.googleapis.cn');
+  ReactDOM.preconnect('https://fonts.gstatic.cn', { crossOrigin: 'anonymous' });
+  ReactDOM.preload('https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap', { as: 'style' });
+  return null;
 }
