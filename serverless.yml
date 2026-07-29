@@ -1,0 +1,17 @@
+component: nextjs
+name: zhongtian-energy
+inputs:
+  src: ./
+  region: ap-guangzhou
+  runtime: Nodejs18.15
+  functionName: zhongtian-energy
+  memorySize: 512
+  timeout: 30
+  # 自定义域名配置（部署后在控制台绑定）
+  # apigatewayConf:
+  #   protocols:
+  #     - https
+  #   customDomains:
+  #     - domain: www.zhongtian.com
+  #       certificateId: your-certificate-id
+  #       isDefaultMapping: true
