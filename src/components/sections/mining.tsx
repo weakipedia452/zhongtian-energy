@@ -69,9 +69,9 @@ export function MiningSection() {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             const images = [
-              '/images/pms_img_07_p6.jpeg',
-              '/images/pms_img_08_p7.png',
-              '/images/pms_img_09_p7.png',
+              '/images/pms_img_05_p4.jpeg',
+              '/images/pms_img_13_p8.jpeg',
+              '/images/pms_img_14_p9.png',
             ];
             return (
               <div
@@ -131,7 +131,7 @@ export function MiningSection() {
             </div>
             <div className="rounded-xl overflow-hidden shadow-lg">
               <img
-                src="/images/pms_img_02_p1.jpeg"
+                src="/images/pms_img_03_p2.jpeg"
                 alt="Mining Location"
                 className="w-full h-[300px] object-cover"
               />

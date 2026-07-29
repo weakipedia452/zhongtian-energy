@@ -115,7 +115,7 @@ export function QualitySection() {
             {/* Image side */}
             <div className="relative h-64 lg:h-auto">
               <img
-                src="/images/pms_img_10_p7.jpeg"
+                src="/images/pms_img_16_p9.jpeg"
                 alt="Quality Control"
                 className="w-full h-full object-cover"
               />

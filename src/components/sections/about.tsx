@@ -51,8 +51,12 @@ export function AboutSection() {
           {/* Founder card */}
           <div className="bg-gradient-to-br from-[#f8fafc] to-white p-8 rounded-2xl border border-gray-100">
             <div className="flex items-start space-x-4 mb-6">
-              <div className="w-16 h-16 bg-[#1a365d] rounded-full flex items-center justify-center flex-shrink-0">
-                <User className="w-8 h-8 text-white" />
+              <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-[#1a365d]/10">
+                <img
+                  src="/images/pms_img_17_p10.jpeg"
+                  alt="Xianlu Wen"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-[#1a365d] mb-1">
@@ -72,8 +76,12 @@ export function AboutSection() {
           {/* General Manager card */}
           <div className="bg-gradient-to-br from-[#f8fafc] to-white p-8 rounded-2xl border border-gray-100">
             <div className="flex items-start space-x-4 mb-6">
-              <div className="w-16 h-16 bg-[#c9a961] rounded-full flex items-center justify-center flex-shrink-0">
-                <User className="w-8 h-8 text-white" />
+              <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 border-4 border-[#c9a961]/20">
+                <img
+                  src="/images/pms_img_18_p10.jpeg"
+                  alt="Jiangxin Wen"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-[#1a365d] mb-1">
