@@ -76,12 +76,11 @@ export function HeroSection() {
             </Button>
             <Button
               size="lg"
-              variant="outline"
               onClick={() => {
                 const element = document.querySelector('#contact');
                 if (element) element.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-6 text-lg font-medium rounded-lg transition-all"
+              className="bg-[#c9a961] hover:bg-[#b8944f] text-[#1a365d] border-2 border-[#c9a961] px-8 py-6 text-lg font-bold rounded-lg transition-all shadow-lg hover:shadow-xl"
             >
               {t('hero.cta.contact')}
             </Button>
