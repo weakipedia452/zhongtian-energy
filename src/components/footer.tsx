@@ -64,8 +64,8 @@ export function Footer() {
             </h4>
             <div className="space-y-2 text-sm text-white/60">
               <p>{t('contact.address.value')}</p>
-              <p>info@zhongtian-energy.com</p>
-              <p>+62 21 XXXX XXXX</p>
+              <p>wenjiangxin@vip.126.com</p>
+              <p>+86 186 2176 6995</p>
             </div>
           </div>
         </div>
