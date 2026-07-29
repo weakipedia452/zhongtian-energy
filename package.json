@@ -5,8 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "start": "node dist/server.js",
-    "preinstall": "npx only-allow pnpm",
+    "start": "next start",
     "lint": "eslint",
     "ts-check": "tsc -p tsconfig.json"
   },
