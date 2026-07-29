@@ -291,11 +291,13 @@ export function QualitySection() {
               <Building2 className="w-8 h-8 text-[#c9a961]" />
             </div>
             <h3 className="text-3xl font-bold text-[#1a365d] mb-4">
-              {locale === 'zh' ? '重要客户' : 'Key Customers'}
+              {t('products.clients.title')}
             </h3>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               {locale === 'zh' 
-                ? '我们的石英砂产品广泛应用于光伏玻璃、浮法玻璃等领域，服务于国内外知名玻璃制造企业' 
+                ? '我们的石英砂产品广泛应用于光伏玻璃、浮法玻璃等领域，服务于国内外知名玻璃制造企业'
+                : locale === 'id'
+                ? 'Produk pasir kuarsa kami banyak digunakan dalam kaca fotovoltaik, kaca float dan bidang lainnya, melayani perusahaan manufaktur kaca terkenal di dalam dan luar negeri'
                 : 'Our quartz sand products are widely used in photovoltaic glass, float glass and other fields, serving well-known glass manufacturing enterprises at home and abroad'}
             </p>
           </div>
@@ -333,17 +335,17 @@ export function QualitySection() {
                     )}
                     <div className="flex-1 min-w-0">
                       <h4 className="text-xl font-bold text-[#1a365d] mb-1">
-                        {locale === 'zh' ? customer.name : customer.nameEn}
+                        {locale === 'zh' ? customer.name : locale === 'id' ? customer.name : customer.nameEn}
                       </h4>
                       <p className="text-sm text-gray-500">
-                        {locale === 'zh' ? customer.nameEn : customer.name}
+                        {locale === 'zh' ? customer.nameEn : locale === 'id' ? customer.nameEn : customer.name}
                       </p>
                     </div>
                   </div>
 
                   {/* Description */}
                   <p className="text-gray-600 leading-relaxed mb-6">
-                    {locale === 'zh' ? customer.description : customer.descriptionEn}
+                    {locale === 'zh' ? customer.description : locale === 'id' ? customer.description : customer.descriptionEn}
                   </p>
 
                   {/* Website Link */}
@@ -354,7 +356,7 @@ export function QualitySection() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center text-[#c9a961] hover:text-[#1a365d] transition-colors font-medium"
                     >
-                      {locale === 'zh' ? '访问官网' : 'Visit Website'}
+                      {locale === 'zh' ? '访问官网' : locale === 'id' ? 'Kunjungi Website' : 'Visit Website'}
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </a>
                   )}
