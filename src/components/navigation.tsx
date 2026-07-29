@@ -47,8 +47,8 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-[#1a365d] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">ZT</span>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img src="/logo.svg" alt="Zhongtian Logo" className="w-full h-full" />
             </div>
             <div className="hidden sm:block">
               <div className={`font-bold text-lg ${isScrolled ? 'text-[#1a365d]' : 'text-white'}`}>

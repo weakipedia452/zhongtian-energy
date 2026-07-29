@@ -13,8 +13,8 @@ export function Footer() {
           {/* Company info */}
           <div>
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-[#c9a961] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">ZT</span>
+              <div className="w-12 h-12 flex items-center justify-center bg-white rounded-lg p-1">
+                <img src="/logo.svg" alt="Zhongtian Logo" className="w-full h-full" />
               </div>
               <div>
                 <div className="font-bold text-lg">ZHONGTIAN</div>

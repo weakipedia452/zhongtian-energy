@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Outer circle -->
+  <circle cx="200" cy="180" r="140" fill="none" stroke="#c9a961" stroke-width="8"/>
+  
+  <!-- Inner semicircle (sun rising) -->
+  <path d="M 120 220 A 80 80 0 0 1 280 220" fill="none" stroke="#c9a961" stroke-width="8"/>
+  
+  <!-- Sun rays -->
+  <line x1="200" y1="140" x2="200" y2="120" stroke="#c9a961" stroke-width="6" stroke-linecap="round"/>
+  <line x1="170" y1="150" x2="160" y2="135" stroke="#c9a961" stroke-width="6" stroke-linecap="round"/>
+  <line x1="230" y1="150" x2="240" y2="135" stroke="#c9a961" stroke-width="6" stroke-linecap="round"/>
+  
+  <!-- Base rectangle -->
+  <rect x="180" y="220" width="40" height="50" fill="#c9a961"/>
+  
+  <!-- Text: ZHONGTIAN -->
+  <text x="200" y="310" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#1a365d" text-anchor="middle">ZHONGTIAN</text>
+  
+  <!-- Text: NEW ENERGY -->
+  <text x="200" y="350" font-family="Arial, sans-serif" font-size="32" fill="#c9a961" text-anchor="middle">NEW ENERGY</text>
+</svg>
