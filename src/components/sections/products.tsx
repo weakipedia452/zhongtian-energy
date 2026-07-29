@@ -91,35 +91,6 @@ export function ProductsSection() {
             );
           })}
         </div>
-
-        {/* Key clients */}
-        <div className="bg-white rounded-2xl p-8 lg:p-12 shadow-sm border border-gray-100">
-          <h3 className="text-2xl font-bold text-[#1a365d] text-center mb-8">
-            {t('products.clients.title')}
-          </h3>
-          <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            <div className="flex items-center justify-center p-6 bg-gradient-to-br from-[#f8fafc] to-white rounded-xl border border-gray-200">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-[#1a365d] rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Award className="w-6 h-6 text-[#c9a961]" />
-                </div>
-                <p className="text-lg font-semibold text-[#1a365d]">
-                  {t('products.clients.1')}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center justify-center p-6 bg-gradient-to-br from-[#f8fafc] to-white rounded-xl border border-gray-200">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-[#1a365d] rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Award className="w-6 h-6 text-[#c9a961]" />
-                </div>
-                <p className="text-lg font-semibold text-[#1a365d]">
-                  {t('products.clients.2')}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
