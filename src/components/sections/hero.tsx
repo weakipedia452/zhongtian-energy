@@ -80,7 +80,7 @@ export function HeroSection() {
                 const element = document.querySelector('#contact');
                 if (element) element.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="bg-transparent hover:bg-[#c9a961] text-[#c9a961] hover:text-[#1a365d] border-2 border-[#c9a961] px-8 py-6 text-lg font-bold rounded-lg transition-all shadow-lg hover:shadow-xl"
+              className="bg-white hover:bg-[#c9a961] text-[#c9a961] hover:text-white border-2 border-white px-8 py-6 text-lg font-bold rounded-lg transition-all shadow-lg hover:shadow-xl"
             >
               {t('hero.cta.contact')}
             </Button>

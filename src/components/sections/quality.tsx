@@ -74,11 +74,15 @@ export function QualitySection() {
             setCustomers([
               {
                 ...defaultCustomers[0],
-                logoUrl: rainbowData.results?.[0]?.logoUrl,
+                logoUrl: rainbowData.results?.[0]?.logoUrl || defaultCustomers[0].logoUrl,
+                description: defaultCustomers[0].description,
+                website: defaultCustomers[0].website,
               },
               {
                 ...defaultCustomers[1],
-                logoUrl: xinyiData.results?.[0]?.logoUrl,
+                logoUrl: xinyiData.results?.[0]?.logoUrl || defaultCustomers[1].logoUrl,
+                description: defaultCustomers[1].description,
+                website: defaultCustomers[1].website,
               },
             ]);
           } else {
