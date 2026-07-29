@@ -18,12 +18,12 @@ export function ContactSection() {
     {
       icon: Phone,
       label: t('contact.phone.label'),
-      value: '+62 21 XXXX XXXX',
+      value: '+86 186 2176 6995',
     },
     {
       icon: Mail,
       label: t('contact.email.label'),
-      value: 'info@zhongtian-energy.com',
+      value: 'wenjiangxin@vip.126.com',
     },
     {
       icon: Clock,
