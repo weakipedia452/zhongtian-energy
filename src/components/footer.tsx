@@ -14,7 +14,7 @@ export function Footer() {
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-12 h-12 flex items-center justify-center bg-white rounded-lg p-1">
-                <img src="/logo.svg" alt="Zhongtian Logo" className="w-full h-full" />
+                <img src="/logo.png" alt="Zhongtian Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <div className="font-bold text-lg">ZHONGTIAN</div>
