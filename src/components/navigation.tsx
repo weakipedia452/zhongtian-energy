@@ -3,6 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useI18n } from '@/contexts/i18n-context';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Menu, X, Globe } from 'lucide-react';
 
 export function Navigation() {
@@ -80,17 +86,31 @@ export function Navigation() {
 
           {/* Language Switch & Mobile Menu */}
           <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
-              className={`${
-                isScrolled ? 'text-gray-700' : 'text-white'
-              } hover:bg-white/10`}
-            >
-              <Globe className="w-4 h-4 mr-1" />
-              {locale === 'zh' ? 'EN' : '中文'}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={`${
+                    isScrolled ? 'text-gray-700' : 'text-white'
+                  } hover:bg-white/10`}
+                >
+                  <Globe className="w-4 h-4 mr-1" />
+                  {locale === 'zh' ? '中文' : locale === 'en' ? 'EN' : 'ID'}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setLocale('zh')}>
+                  中文
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLocale('en')}>
+                  English
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLocale('id')}>
+                  Bahasa Indonesia
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Mobile Menu Button */}
             <Button
