@@ -242,7 +242,7 @@ export function QualitySection() {
         {/* Product samples gallery */}
         <div className="mt-16">
           <h3 className="text-2xl font-bold text-[#1a365d] text-center mb-8">
-            {locale === 'zh' ? '产品样品展示' : 'Product Samples'}
+            {t('products.samples.title')}
           </h3>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="rounded-xl overflow-hidden shadow-md bg-white">

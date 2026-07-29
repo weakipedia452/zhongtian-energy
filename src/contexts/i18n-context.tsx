@@ -66,6 +66,7 @@ const translations = {
     'products.clients.title': '重要客户',
     'products.clients.1': '江西彩虹光伏',
     'products.clients.2': '信义玻璃（印尼）',
+    'products.samples.title': '产品样品展示',
     
     // Mining
     'mining.title': '矿山与加工',
@@ -224,6 +225,7 @@ const translations = {
     'products.clients.title': 'Key Clients',
     'products.clients.1': 'Jiangxi Rainbow Photovoltaic',
     'products.clients.2': 'Xinyi Glass (Indonesia)',
+    'products.samples.title': 'Product Samples',
     
     // Mining
     'mining.title': 'Mining & Processing',
@@ -382,6 +384,7 @@ const translations = {
     'products.clients.title': 'Klien Utama',
     'products.clients.1': 'Jiangxi Rainbow Photovoltaic',
     'products.clients.2': 'Xinyi Glass (Indonesia)',
+    'products.samples.title': 'Galeri Sampel Produk',
     
     // Mining
     'mining.title': 'Pertambangan & Pemrosesan',
