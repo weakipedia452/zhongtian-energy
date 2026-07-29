@@ -13,6 +13,7 @@ export function ProductsSection() {
       desc: t('products.float.desc'),
       spec: t('products.float.spec'),
       color: 'from-blue-500 to-blue-600',
+      image: '/images/pms_img_04_p3.jpeg',
     },
     {
       icon: Truck,
@@ -20,6 +21,7 @@ export function ProductsSection() {
       desc: t('products.export.desc'),
       spec: t('products.export.spec'),
       color: 'from-[#c9a961] to-[#b89950]',
+      image: '/images/pms_img_05_p4.jpeg',
     },
     {
       icon: Zap,
@@ -27,6 +29,7 @@ export function ProductsSection() {
       desc: t('products.pv.desc'),
       spec: t('products.pv.spec'),
       color: 'from-[#1a365d] to-[#0f2847]',
+      image: '/images/pms_img_06_p5.jpeg',
     },
   ];
 
@@ -50,27 +53,39 @@ export function ProductsSection() {
             return (
               <div
                 key={index}
-                className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+                className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
               >
-                {/* Icon */}
-                <div className={`w-16 h-16 bg-gradient-to-br ${product.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-8 h-8 text-white" />
+                {/* Product Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-bold text-[#1a365d] mb-3">
-                  {product.title}
-                </h3>
-                <p className="text-gray-600 mb-4 leading-relaxed">
-                  {product.desc}
-                </p>
+                <div className="p-8">
+                  {/* Icon */}
+                  <div className={`w-16 h-16 bg-gradient-to-br ${product.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform -mt-14 relative z-10 shadow-lg`}>
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
 
-                {/* Spec badge */}
-                <div className="inline-flex items-center px-4 py-2 bg-[#c9a961]/10 rounded-lg">
-                  <Award className="w-4 h-4 text-[#c9a961] mr-2" />
-                  <span className="text-sm font-medium text-[#1a365d]">
-                    {product.spec}
-                  </span>
+                  <h3 className="text-xl font-bold text-[#1a365d] mb-3">
+                    {product.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 leading-relaxed">
+                    {product.desc}
+                  </p>
+
+                  {/* Spec badge */}
+                  <div className="inline-flex items-center px-4 py-2 bg-[#c9a961]/10 rounded-lg">
+                    <Award className="w-4 h-4 text-[#c9a961] mr-2" />
+                    <span className="text-sm font-medium text-[#1a365d]">
+                      {product.spec}
+                    </span>
+                  </div>
                 </div>
               </div>
             );

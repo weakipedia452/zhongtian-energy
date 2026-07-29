@@ -28,10 +28,21 @@ export function AboutSection() {
 
         {/* Company intro */}
         <div className="mb-20">
-          <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-gray-700 leading-relaxed text-center">
-              {t('about.intro')}
-            </p>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  {t('about.intro')}
+                </p>
+              </div>
+              <div className="rounded-2xl overflow-hidden shadow-lg">
+                <img
+                  src="/images/pms_img_11_p8.jpeg"
+                  alt="Company Overview"
+                  className="w-full h-[300px] object-cover"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

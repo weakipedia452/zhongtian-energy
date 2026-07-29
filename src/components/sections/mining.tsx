@@ -68,20 +68,37 @@ export function MiningSection() {
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon;
+            const images = [
+              '/images/pms_img_07_p6.jpeg',
+              '/images/pms_img_08_p7.png',
+              '/images/pms_img_09_p7.png',
+            ];
             return (
               <div
                 key={index}
-                className="bg-[#f8fafc] rounded-2xl p-8 hover:bg-white hover:shadow-lg transition-all duration-300 border border-gray-100"
+                className="bg-[#f8fafc] rounded-2xl overflow-hidden hover:bg-white hover:shadow-lg transition-all duration-300 border border-gray-100"
               >
-                <div className="w-14 h-14 bg-[#c9a961]/10 rounded-xl flex items-center justify-center mb-6">
-                  <Icon className="w-7 h-7 text-[#c9a961]" />
+                {/* Feature Image */}
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src={images[index]}
+                    alt={feature.title}
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-[#1a365d] mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.desc}
-                </p>
+                
+                {/* Content */}
+                <div className="p-8">
+                  <div className="w-14 h-14 bg-[#c9a961]/10 rounded-xl flex items-center justify-center mb-6">
+                    <Icon className="w-7 h-7 text-[#c9a961]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[#1a365d] mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </div>
               </div>
             );
           })}
@@ -112,16 +129,12 @@ export function MiningSection() {
                 </span>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-[#1a365d]/5 to-[#c9a961]/5 rounded-xl p-8 flex items-center justify-center min-h-[300px]">
-              <div className="text-center">
-                <MapPin className="w-16 h-16 text-[#c9a961] mx-auto mb-4" />
-                <p className="text-[#1a365d] font-semibold text-lg">
-                  {locale === 'zh' ? '邦加勿里洞岛' : 'Bangka Belitung Islands'}
-                </p>
-                <p className="text-gray-500 text-sm mt-2">
-                  {locale === 'zh' ? '矿区所在地' : 'Mining Site Location'}
-                </p>
-              </div>
+            <div className="rounded-xl overflow-hidden shadow-lg">
+              <img
+                src="/images/pms_img_02_p1.jpeg"
+                alt="Mining Location"
+                className="w-full h-[300px] object-cover"
+              />
             </div>
           </div>
         </div>

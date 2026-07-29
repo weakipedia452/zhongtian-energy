@@ -110,29 +110,44 @@ export function QualitySection() {
         </div>
 
         {/* Quality standard */}
-        <div className="bg-gradient-to-br from-[#1a365d] to-[#0f2847] rounded-2xl p-8 lg:p-12 text-center">
-          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-6">
-            {t('quality.standard.title')}
-          </h3>
-          <p className="text-lg text-white/80 max-w-4xl mx-auto leading-relaxed">
-            {t('quality.standard.desc')}
-          </p>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#c9a961] mb-2">99.59%</div>
-              <div className="text-sm text-white/70">SiO₂</div>
+        <div className="bg-gradient-to-br from-[#1a365d] to-[#0f2847] rounded-2xl overflow-hidden">
+          <div className="grid lg:grid-cols-2">
+            {/* Image side */}
+            <div className="relative h-64 lg:h-auto">
+              <img
+                src="/images/pms_img_10_p7.jpeg"
+                alt="Quality Control"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#1a365d]/50 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#1a365d]"></div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#c9a961] mb-2">≤93ppm</div>
-              <div className="text-sm text-white/70">Fe₂O₃</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#c9a961] mb-2">PV</div>
-              <div className="text-sm text-white/70">{locale === 'zh' ? '光伏级' : 'Grade'}</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-3xl font-bold text-[#c9a961] mb-2">100%</div>
-              <div className="text-sm text-white/70">{locale === 'zh' ? '品质保证' : 'Quality'}</div>
+            
+            {/* Content side */}
+            <div className="p-8 lg:p-12 text-center lg:text-left">
+              <h3 className="text-2xl lg:text-3xl font-bold text-white mb-6">
+                {t('quality.standard.title')}
+              </h3>
+              <p className="text-lg text-white/80 leading-relaxed mb-8">
+                {t('quality.standard.desc')}
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                  <div className="text-3xl font-bold text-[#c9a961] mb-2">99.59%</div>
+                  <div className="text-sm text-white/70">SiO₂</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                  <div className="text-3xl font-bold text-[#c9a961] mb-2">≤93ppm</div>
+                  <div className="text-sm text-white/70">Fe₂O₃</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                  <div className="text-3xl font-bold text-[#c9a961] mb-2">PV</div>
+                  <div className="text-sm text-white/70">{locale === 'zh' ? '光伏级' : 'Grade'}</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                  <div className="text-3xl font-bold text-[#c9a961] mb-2">100%</div>
+                  <div className="text-sm text-white/70">{locale === 'zh' ? '品质保证' : 'Quality'}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
