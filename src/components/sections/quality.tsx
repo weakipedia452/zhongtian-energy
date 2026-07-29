@@ -16,8 +16,6 @@ interface CustomerInfo {
 
 export function QualitySection() {
   const { t, locale } = useI18n();
-  const [customers, setCustomers] = useState<CustomerInfo[]>([]);
-  const [loading, setLoading] = useState(false);
 
   const processSteps = [
     t('quality.process.1'),
@@ -28,8 +26,8 @@ export function QualitySection() {
     t('quality.process.6'),
   ];
 
-  // 默认客户信息（搜索失败时的兜底数据）
-  const defaultCustomers: CustomerInfo[] = [
+  // 客户信息（静态数据，禁用搜索功能）
+  const customers: CustomerInfo[] = [
     {
       name: '江西彩虹光伏有限公司',
       nameEn: 'Jiangxi Rainbow Photovoltaic Co., Ltd.',
@@ -47,63 +45,6 @@ export function QualitySection() {
       website: 'https://www.xinyiglass.com',
     },
   ];
-
-  useEffect(() => {
-    // 尝试搜索客户信息
-    const fetchCustomerInfo = async () => {
-      setLoading(true);
-      try {
-        const [rainbowRes, xinyiRes] = await Promise.all([
-          fetch('/api/search', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: '江西彩虹光伏有限公司 光伏玻璃', count: 3 }),
-          }),
-          fetch('/api/search', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: '信义玻璃印尼 Xinyi Glass Indonesia', count: 3 }),
-          }),
-        ]);
-
-        if (rainbowRes.ok && xinyiRes.ok) {
-          const [rainbowData, xinyiData] = await Promise.all([
-            rainbowRes.json(),
-            xinyiRes.json(),
-          ]);
-
-          // 如果有搜索结果，更新客户信息
-          if (rainbowData.results?.length > 0 || xinyiData.results?.length > 0) {
-            setCustomers([
-              {
-                ...defaultCustomers[0],
-                logoUrl: rainbowData.results?.[0]?.logoUrl || defaultCustomers[0].logoUrl,
-                description: defaultCustomers[0].description,
-                website: defaultCustomers[0].website,
-              },
-              {
-                ...defaultCustomers[1],
-                logoUrl: xinyiData.results?.[0]?.logoUrl || defaultCustomers[1].logoUrl,
-                description: defaultCustomers[1].description,
-                website: defaultCustomers[1].website,
-              },
-            ]);
-          } else {
-            setCustomers(defaultCustomers);
-          }
-        } else {
-          setCustomers(defaultCustomers);
-        }
-      } catch (error) {
-        console.error('Failed to fetch customer info:', error);
-        setCustomers(defaultCustomers);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCustomerInfo();
-  }, []);
 
   return (
     <section id="quality" className="py-20 lg:py-32 bg-[#f8fafc]">
