@@ -5,6 +5,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { type, ...data } = body;
 
+    console.log('收到表单提交:', { type, ...data });
+
     // 验证必填字段
     if (type === 'contact') {
       if (!data.name || !data.email || !data.message) {
@@ -14,7 +16,7 @@ export async function POST(request: Request) {
         );
       }
     } else if (type === 'resume') {
-      if (!data.name || !data.email || !data.position || !data.resume) {
+      if (!data.name || !data.email || !data.position) {
         return NextResponse.json(
           { success: false, error: '请填写所有必填字段' },
           { status: 400 }
@@ -26,7 +28,7 @@ export async function POST(request: Request) {
     // 例如：SendGrid, Nodemailer, 或腾讯云邮件推送
     
     // 临时方案：返回成功，实际邮件需要通过后端服务发送
-    console.log('收到表单提交:', { type, ...data });
+    console.log('表单提交成功:', { type, ...data });
 
     return NextResponse.json({
       success: true,
