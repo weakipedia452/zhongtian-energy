@@ -246,20 +246,8 @@ export function QualitySection() {
             </p>
           </div>
 
-          {loading ? (
-            <div className="grid md:grid-cols-2 gap-8">
-              {[1, 2].map((i) => (
-                <div key={i} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 animate-pulse">
-                  <div className="h-16 bg-gray-200 rounded-lg mb-6"></div>
-                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-8">
-              {customers.map((customer, index) => (
+          <div className="grid md:grid-cols-2 gap-8">
+            {customers.map((customer, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-lg hover:border-[#c9a961]/30 transition-all duration-300"
@@ -311,7 +299,6 @@ export function QualitySection() {
                 </div>
               ))}
             </div>
-          )}
         </div>
       </div>
     </section>
