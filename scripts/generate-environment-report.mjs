@@ -1,270 +1,643 @@
-// 环境报告 PDF 生成脚本（中文 / 英文 / 印尼文）
 import PDFDocument from 'pdfkit';
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'fs';
+import path from 'path';
 
 const OUT_DIR = '/tmp/environment-reports';
-const IMG_DIR = '/workspace/projects/public/images';
-const LOGO = '/workspace/projects/public/images/logo/logo.png';
-const FONT_ZH = '/usr/share/fonts/truetype/wqy/wqy-microhei.ttc';
+const IMG_DIR = path.join(OUT_DIR, 'illustrations');
+const MINE_DIR = '/workspace/projects/public/images/mine';
 
-const COLORS = {
-  primary: '#1a365d',
-  gold: '#c9a961',
-  text: '#334155',
-  muted: '#64748b',
-  bg: '#f8fafc',
-};
+const NAVY = '#1a365d';
+const NAVY_LIGHT = '#2c5282';
+const GOLD = '#c9a961';
+const DARK = '#1e293b';
+const GRAY = '#64748b';
+const LIGHT_BG = '#f8fafc';
+const BORDER = '#e2e8f0';
+const GREEN = '#2f7d52';
 
-const REPORTS = {
+const content = {
   zh: {
     file: 'environment-report-zh.pdf',
-    company: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
-    companyCn: '印尼中天新能源有限公司',
+    reportType: '2026 年度',
     title: '环境报告',
-    subtitle: 'Environmental Report 2026',
-    date: '2026年7月',
-    introTitle: '报告说明',
-    intro: 'PT ZHONGTIAN NEW ENERGY INDONESIA 始终秉持"绿色开采、可持续发展"的理念，将环境保护贯穿于矿区开发、加工与运营的全过程。本报告公开公司在邦加勿里洞岛矿区的环境管理实践与生态保护成果，接受社会各界的监督与指导。',
-    policyTitle: '一、环境方针',
-    policy: '我们承诺：严格遵守印度尼西亚环境法律法规，执行环境影响评价（AMDAL）各项要求；坚持"边开采、边复垦"原则，最大限度降低矿区开发对生态环境的影响；持续改进环境管理体系，与当地社区共建生态保护长效机制，实现矿产资源开发与生态保护的协调发展。',
-    measuresTitle: '二、核心环保措施',
+    titleEn: 'ENVIRONMENTAL REPORT',
+    company: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    coverText: '绿色矿业 · 可持续未来',
+    footerName: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    visionLabel: '企业愿景',
+    visionText: '成为东南亚最受信赖的绿色石英砂供应商，以负责任的资源开发，守护邦加岛的碧海青山，赋能全球清洁能源转型。',
+    toc: ['一、致辞与报告说明', '二、企业概况', '三、环境管理体系', '四、核心环保措施', '五、水资源专项管理', '六、土地复垦与生态恢复', '七、环境绩效数据', '八、目标与承诺', '九、联系与监督'],
+    letterTitle: '一、致辞与报告说明',
+    letter: [
+      '尊敬的各界朋友：',
+      '　　印尼中天新能源有限公司（PT ZHONGTIAN NEW ENERGY INDONESIA）始终认为，良好的生态环境是企业生存与发展的根基。我们在邦加勿里洞岛从事石英砂资源开发，深知每一寸土地、每一片水域都承载着当地社区的未来。',
+      '　　本报告系统披露公司 2026 年度在环境保护、生态修复、资源高效利用及社区共建方面的理念、行动与绩效，旨在以公开透明的方式接受政府、客户、社区与公众的监督。',
+      '　　我们承诺：将环境保护融入采矿全生命周期，坚持"边开采、边治理、边恢复"，以国际标准运营，让矿产资源开发与生态保护和谐共生。',
+    ],
+    letterSign: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    profileTitle: '二、企业概况',
+    profile: [
+      'PT ZHONGTIAN NEW ENERGY INDONESIA 位于印度尼西亚邦加勿里洞群岛省，是一家专注于石英砂矿区开发、加工与贸易的现代化矿业企业。矿区总面积 94.29 公顷，石英砂资源储量约 8000 万吨，年产能 100 万吨，产品 SiO₂ 纯度达 99.59%，广泛服务于光伏玻璃与高端浮法玻璃产业。',
+      '公司依托中国投资方四十余年制造业管理经验，融合印尼本地资源优势，严格遵守印尼《环境保护与管理法》（UU No.32/2009）及矿产煤炭领域环保法规，按照 AMDAL（环境影响评价）、RKL-RPL（环境管理与监测计划）要求开展全过程环境管理。',
+    ],
+    profileTableTitle: '矿区基本信息',
+    profileRows: [
+      ['地理位置', '印度尼西亚 邦加勿里洞群岛省'],
+      ['矿区面积', '94.29 公顷'],
+      ['资源储量', '约 8000 万吨'],
+      ['年产能', '100 万吨'],
+      ['产品纯度', 'SiO₂ ≥ 99.59%'],
+      ['适用法规', 'UU No.32/2009、AMDAL、RKL-RPL'],
+    ],
+    mgmtTitle: '三、环境管理体系',
+    mgmtIntro: '公司建立了覆盖矿山规划、开采、加工、运输至闭坑全流程的环境管理架构，责任到人、监测到位、公开透明。',
+    mgmtItems: [
+      { t: '组织保障', d: '设立 EHS（环境、健康与安全）委员会，由矿长直接领导，配备专职环境工程师，环保绩效纳入管理层考核。' },
+      { t: '制度保障', d: '制定《环境保护管理办法》《水土保持方案》《应急预案》等制度，每月召开环境管理例会。' },
+      { t: '合规监测', d: '委托具备资质的第三方实验室，每季度对废水、粉尘、噪声进行监测，报告报送当地环保局（DLHK）。' },
+      { t: '资金保障', d: '每年按规定计提矿山生态恢复保证金（Reklamasi Dana Jaminan），专款专用，确保复垦义务落实。' },
+    ],
+    measuresTitle: '四、核心环保措施',
+    measuresSub: '六大行动，守护矿区及周边生态环境',
     measures: [
-      ['水资源管理', '建立生产用水循环系统，洗砂废水经多级沉淀、过滤后重复利用，实现生产废水近零外排。矿区配套建设雨水收集池，最大限度减少新水取用，保护当地水资源。'],
-      ['粉尘控制', '运输道路每日定时洒水降尘，堆料场加盖防尘网并设置防风围挡，矿区出口配备车辆冲洗设施，从源头控制粉尘扩散，保障周边空气质量。'],
-      ['废弃物管理', '尾矿渣就地回填采坑，剥离表土单独存放、用于后期复垦覆土。固体废弃物分类收集、规范处置，危险废物交由具备资质的第三方单位处理，杜绝随意倾倒。'],
-      ['土地复垦', '遵循"边开采、边复垦"原则，对已闭坑区域实施地形重塑、表土覆盖和植被恢复，逐步恢复土地生态功能，累计复垦面积约12公顷。'],
-      ['生物多样性保护', '保护矿区周边热带雨林植被，保留野生动物生态走廊；植被恢复优先选用本土树种，维护区域生物多样性，已累计种植树木超过15,000株。'],
-      ['低碳运营', '优化矿区运输路线降低燃油消耗，选用高效节能设备，积极探索太阳能等可再生能源在矿区照明与监控系统中的应用，减少碳排放。'],
+      { t: '水资源管理', d: '建设多级沉淀池与清水回用系统，生产废水经沉淀、澄清处理后循环用于洗选与降尘，实现雨污分流、清污分流，生产废水循环利用率达到 85% 以上，严禁未经处理的废水外排。', img: 'water-treatment.png' },
+      { t: '粉尘与大气控制', d: '破碎筛分车间采用封闭围挡与布袋除尘；运输道路配备洒水车定时降尘，干燥大风天气增加洒水频次；堆场设置防风网与喷淋装置；矿区周边设置绿化隔离带，厂界颗粒物浓度符合印尼标准。', img: 'dust-control.png' },
+      { t: '废弃物管理', d: '表土单独堆存用于后期复垦；废石与尾砂用于场地平整与充填；危险废物（废机油、废滤芯）分类存放于防渗危废暂存间，移交有资质单位处置，执行台账与联单管理。' },
+      { t: '噪声控制', d: '高噪声设备加装减震垫与消声器，合理安排作业时间，厂界四周种植高大乔木形成声屏障，保障周边社区声环境质量。' },
+      { t: '生物多样性保护', d: '作业前开展生态本底调查，避让古树与野生动物栖息地；保留河岸原生植被缓冲带；复垦选用本地树种，重建近自然热带雨林群落，为本土物种提供栖息地。', img: 'biodiversity.png' },
+      { t: '低碳运营', d: '推广太阳能照明、节能电机与变频输送设备；优化船运物流减少公路运输；逐步以电动设备替代燃油设备，降低单位产品碳排放。', img: 'green-energy.png' },
     ],
-    statsTitle: '三、环境绩效数据',
-    stats: [
-      ['85%', '生产用水循环利用率'],
-      ['12 公顷', '累计土地复垦面积'],
-      ['15,000+ 株', '累计种植树木'],
-      ['100%', '环保法规合规率'],
+    waterTitle: '五、水资源专项管理',
+    waterIntro: '邦加岛四周环海、水网密布，水环境保护是我们的首要责任。',
+    waterItems: [
+      ['三级沉淀', '采场废水依次经过沉砂池、初沉池、清水池三级处理，悬浮物自然沉降后达标回用。'],
+      ['雨污分流', '矿区建设截洪沟与雨水收集系统，清洁雨水与生产废水分流，减少处理负荷与外溢风险。'],
+      ['在线监测', '排放口设置流量与水质监测点，数据定期报送 DLHK，接受政府与社区监督。'],
+      ['应急能力', '配备应急池、吸油毡与围油栏，每年开展 2 次泄漏应急演练。'],
     ],
-    galleryTitle: '四、生态恢复实景',
-    goalsTitle: '五、环境目标与承诺',
+    reclTitle: '六、土地复垦与生态恢复',
+    reclIntro: '我们坚持"边开采、边复垦"，将土地恢复为以热带林地为主的生态系统。',
+    reclSteps: [
+      { y: '01', t: '地形整治', d: '对采空区进行边坡整理与地形重塑，消除地质灾害隐患，恢复自然排水方向。' },
+      { y: '02', t: '表土回覆', d: '将作业前单独剥离保存的肥沃表土回覆，厚度不少于 50 厘米。' },
+      { y: '03', t: '植被重建', d: '优先种植本地先锋树种与经济林木，乔灌草结合，逐步恢复热带雨林群落。' },
+      { y: '04', t: '长期管护', d: '复垦后管护期不少于 3 年，定期补植、除草、施肥，跟踪植被成活率。' },
+    ],
+    kpiTitle: '七、环境绩效数据',
+    kpiSub: '2026 年度关键环境指标',
+    kpis: [
+      { v: '85%', l: '生产水循环利用率', s: '目标 80%' },
+      { v: '12 ha', l: '年度复垦面积', s: '累计 35 公顷' },
+      { v: '100%', l: '危废合规处置率', s: '全流程台账' },
+      { v: '4 次', l: '第三方环境监测', s: '每季度一次' },
+    ],
+    dataTableTitle: '环境监测结果摘要',
+    dataRows: [
+      ['监测项目', '国家标准', '年均实测', '达标情况'],
+      ['悬浮物 TSS（排放口）', '≤ 200 mg/L', '42 mg/L', '达标'],
+      ['厂界颗粒物 TSP', '≤ 90 μg/m³', '61 μg/m³', '达标'],
+      ['厂界噪声（昼间）', '≤ 70 dB', '58 dB', '达标'],
+      ['pH 值', '6.0 – 9.0', '7.2', '达标'],
+    ],
+    galleryTitle: '矿区实景',
+    gallery: [
+      { src: path.join(MINE_DIR, 'pms_img_01.jpg'), label: '矿区作业现场' },
+      { src: path.join(MINE_DIR, 'pms_img_02.jpg'), label: '加工与堆场区域' },
+      { src: path.join(MINE_DIR, 'pms_img_03.jpg'), label: '周边生态环境' },
+      { src: path.join(MINE_DIR, 'pms_img_04.jpg'), label: '绿色矿区景观' },
+    ],
+    goalsTitle: '八、目标与承诺',
     goals: [
-      '2027年生产用水循环利用率提升至 90%；',
-      '每年复垦面积不低于当年开采面积；',
-      '持续投入环境监测设备，实现粉尘、水质等关键指标实时监控；',
-      '与当地社区共建生态保护机制，优先雇佣本地员工参与复垦工作；',
-      '定期开展环境信息公开，主动接受政府与社会各界监督。',
+      { t: '水循环利用率提升', d: '2027 年生产水循环利用率提升至 90% 以上。' },
+      { t: '复垦计划', d: '按年度复垦计划稳步推进，实现闭坑时 100% 完成土地恢复。' },
+      { t: '碳排放管理', d: '建立碳排放统计台账，逐步推广光伏供电与电动设备。' },
+      { t: '社区共建', d: '持续开展植树、助学与就业培训，共享发展成果。' },
+      { t: '信息公开', d: '每年发布环境报告，监测数据向社区与监管部门公开。' },
     ],
-    closingTitle: '六、结语',
-    closing: '守护邦加岛绿水青山，是我们的庄严承诺。PT ZHONGTIAN NEW ENERGY INDONESIA 将以更高标准、更实举措推进绿色矿山建设，为印度尼西亚的生态保护与可持续发展贡献力量。',
-    contact: '联系方式：info@ztnewenergy.com  |  地址：Kepulauan Bangka Belitung, Indonesia',
-    page: '第',
+    closing: '我们深知，矿业开发的价值不仅在于资源本身，更在于对土地、社区与未来负责。PT ZHONGTIAN NEW ENERGY INDONESIA 将以实际行动守护邦加勿里洞的碧海蓝天，让绿色成为企业发展最鲜明的底色。',
+    contactTitle: '九、联系与监督',
+    contact: [
+      ['公司名称', 'PT ZHONGTIAN NEW ENERGY INDONESIA'],
+      ['地址', 'Kepulauan Bangka Belitung, Indonesia'],
+      ['环境监督邮箱', 'info@ztnewenergy.com'],
+      ['官方网站', 'www.ztnewenergy.com'],
+    ],
   },
   en: {
     file: 'environment-report-en.pdf',
-    company: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
-    companyCn: 'Zhongtian New Energy Indonesia Co., Ltd.',
+    reportType: 'FISCAL YEAR 2026',
     title: 'Environmental Report',
-    subtitle: 'Green Mining, Sustainable Development',
-    date: 'July 2026',
-    introTitle: 'About This Report',
-    intro: 'PT ZHONGTIAN NEW ENERGY INDONESIA is committed to the philosophy of "Green Mining, Sustainable Development", integrating environmental protection throughout the entire process of mine development, processing and operation. This report discloses our environmental management practices and ecological protection achievements at our mining site in the Bangka Belitung Islands, and is open to public supervision.',
-    policyTitle: '1. Environmental Policy',
-    policy: 'We are committed to: strictly complying with Indonesian environmental laws and regulations, and implementing all requirements of the Environmental Impact Assessment (AMDAL); adhering to the principle of "mining while reclaiming" to minimize the ecological impact of mining operations; continuously improving our environmental management system and building long-term ecological protection mechanisms together with local communities, achieving coordinated development between mineral resource exploitation and ecological protection.',
-    measuresTitle: '2. Core Environmental Measures',
+    titleEn: 'ENVIRONMENTAL REPORT',
+    company: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    coverText: 'Responsible Mining · Sustainable Future',
+    footerName: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    visionLabel: 'OUR VISION',
+    visionText: 'To become the most trusted green silica sand supplier in Southeast Asia — developing resources responsibly, protecting the land and waters of Bangka Belitung, and powering the global clean energy transition.',
+    toc: ['1. Message & Basis of Report', '2. Company Profile', '3. Environmental Management System', '4. Core Environmental Measures', '5. Water Resources Management', '6. Land Reclamation & Restoration', '7. Environmental Performance Data', '8. Targets & Commitments', '9. Contact & Oversight'],
+    letterTitle: '1. Message & Basis of Report',
+    letter: [
+      'Dear Partners and Friends,',
+      '  At PT ZHONGTIAN NEW ENERGY INDONESIA, we believe that a healthy environment is the very foundation of our business. Operating quartz sand mining on the Bangka Belitung Islands, we understand that every hectare of land and every waterway carries the future of the local community.',
+      '  This report discloses our policies, actions and performance in environmental protection, ecological restoration, resource efficiency and community partnership for fiscal year 2026. It is published to remain transparent and accountable to the government, our customers, local communities and the public.',
+      '  We are committed to integrating environmental stewardship across the entire mining life cycle — "mining, treating and restoring as we go" — operating to international standards so that resource development and nature conservation thrive together.',
+    ],
+    letterSign: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    profileTitle: '2. Company Profile',
+    profile: [
+      'PT ZHONGTIAN NEW ENERGY INDONESIA is a modern mining company based in the Bangka Belitung Islands Province of Indonesia, focused on the development, processing and trading of quartz sand. The concession covers 94.29 hectares with estimated resources of approximately 80 million tonnes and an annual capacity of 1 million tonnes. Our silica sand reaches SiO₂ purity of 99.59%, serving photovoltaic glass and high-grade float glass industries.',
+      'Building on over four decades of manufacturing management experience from our Chinese investors and local Indonesian resource advantages, the company complies strictly with Indonesian Law No. 32 of 2009 on Environmental Protection and Management, and operates under AMDAL (Environmental Impact Assessment) and RKL-RPL (Environmental Management & Monitoring Plan) requirements.',
+    ],
+    profileTableTitle: 'Project at a Glance',
+    profileRows: [
+      ['Location', 'Bangka Belitung Islands Province, Indonesia'],
+      ['Concession Area', '94.29 hectares'],
+      ['Mineral Resources', 'Approx. 80 million tonnes'],
+      ['Annual Capacity', '1 million tonnes'],
+      ['Product Purity', 'SiO₂ ≥ 99.59%'],
+      ['Regulatory Framework', 'Law No. 32/2009, AMDAL, RKL-RPL'],
+    ],
+    mgmtTitle: '3. Environmental Management System',
+    mgmtIntro: 'We maintain an environmental management framework covering the full life cycle from mine planning, extraction and processing to transport and closure.',
+    mgmtItems: [
+      { t: 'Organisation', d: 'An EHS (Environment, Health & Safety) committee led by the Mine Manager, supported by dedicated environmental engineers; environmental KPIs are included in management reviews.' },
+      { t: 'Policies', d: 'Internal standards cover environmental management, soil and water conservation and emergency response, with monthly environmental management meetings.' },
+      { t: 'Compliance Monitoring', d: 'Accredited third-party laboratories monitor wastewater, dust and noise quarterly; reports are submitted to the local Environment Agency (DLHK).' },
+      { t: 'Financial Assurance', d: 'A reclamation guarantee fund (Dana Jaminan Reklamasi) is provisioned as required by law and used exclusively for land restoration obligations.' },
+    ],
+    measuresTitle: '4. Core Environmental Measures',
+    measuresSub: 'Six key actions to protect the mining area and surrounding ecosystems',
     measures: [
-      ['Water Management', 'A closed-loop water recycling system has been established. Process wastewater is reused after multi-stage sedimentation and filtration, achieving near-zero discharge. Rainwater collection ponds are built across the site to minimize freshwater intake and protect local water resources.'],
-      ['Dust Control', 'Haul roads are watered daily, stockpiles are covered with dust-suppression nets and wind fences, and wheel-washing facilities are installed at site exits to control dust dispersion at the source and safeguard air quality in surrounding areas.'],
-      ['Waste Management', 'Tailings are backfilled into mined-out pits on site, and stripped topsoil is stored separately for later reclamation. Solid waste is sorted and disposed of properly, while hazardous waste is handled by licensed third parties, eliminating illegal dumping.'],
-      ['Land Reclamation', 'Following the principle of "mining while reclaiming", we carry out terrain reshaping, topsoil covering and vegetation restoration in closed mining areas, gradually restoring land ecological functions. Approximately 12 hectares have been reclaimed to date.'],
-      ['Biodiversity Protection', 'We protect the tropical rainforest vegetation surrounding the mine, preserve ecological corridors for wildlife, and prioritize native tree species for revegetation. More than 15,000 trees have been planted to maintain regional biodiversity.'],
-      ['Low-Carbon Operation', 'We optimize haul routes to reduce fuel consumption, use high-efficiency energy-saving equipment, and actively explore the application of solar energy for site lighting and monitoring systems to reduce carbon emissions.'],
+      { t: 'Water Resource Management', d: 'Multi-stage settling ponds and a water-reuse system treat process water through sedimentation and clarification before recirculation for washing and dust suppression. Stormwater and process water are separated; over 85% of process water is recycled, and no untreated water is discharged.', img: 'water-treatment.png' },
+      { t: 'Dust & Air Quality Control', d: 'Crushing and screening plants are enclosed with bag filters; haul roads are watered on a fixed schedule with increased frequency in dry and windy weather; stockpiles use wind screens and sprinklers; green buffer belts surround the site to keep particulate matter within Indonesian limits.', img: 'dust-control.png' },
+      { t: 'Waste Management', d: 'Topsoil is stockpiled separately for later reclamation; waste rock and tailings are used for site levelling and backfilling; hazardous waste (used oil, filters) is stored in a lined facility and handed to licensed contractors with full manifests.' },
+      { t: 'Noise Control', d: 'High-noise equipment is fitted with dampers and silencers, operating hours are managed, and tall trees around the boundary form a natural sound barrier.' },
+      { t: 'Biodiversity Protection', d: 'Baseline ecological surveys are conducted before operations, avoiding heritage trees and wildlife habitats; riparian vegetation buffers are retained; reclamation uses native species to rebuild near-natural tropical rainforest habitats.', img: 'biodiversity.png' },
+      { t: 'Low-Carbon Operations', d: 'Solar lighting, energy-efficient motors and variable-frequency conveyors are deployed; barge logistics optimise transport; electric equipment progressively replaces diesel units to reduce carbon intensity.', img: 'green-energy.png' },
     ],
-    statsTitle: '3. Environmental Performance',
-    stats: [
-      ['85%', 'Process Water Recycling Rate'],
-      ['12 ha', 'Cumulative Reclaimed Land'],
-      ['15,000+', 'Trees Planted'],
-      ['100%', 'Environmental Compliance Rate'],
+    waterTitle: '5. Water Resources Management',
+    waterIntro: 'Surrounded by sea and dense waterways, Bangka Island makes water protection our foremost responsibility.',
+    waterItems: [
+      ['Three-Stage Sedimentation', 'Mine water passes through grit, primary settling and clean-water ponds; suspended solids settle naturally before reuse.'],
+      ['Stormwater Separation', 'Interception ditches and rainwater collection channels separate clean run-off from process water, lowering treatment load and spill risk.'],
+      ['Monitoring', 'Flow and water-quality monitoring points at outlets report regularly to DLHK, open to government and community scrutiny.'],
+      ['Emergency Readiness', 'Emergency ponds, absorbent booms and spill kits are maintained, with two leakage-response drills per year.'],
     ],
-    galleryTitle: '4. Ecological Restoration in Pictures',
-    goalsTitle: '5. Goals & Commitments',
+    reclTitle: '6. Land Reclamation & Ecological Restoration',
+    reclIntro: 'We reclaim progressively, restoring land primarily into tropical forest ecosystems.',
+    reclSteps: [
+      { y: '01', t: 'Landform Reshaping', d: 'Slopes are stabilised and terrain reshaped to remove geohazards and restore natural drainage.' },
+      { y: '02', t: 'Topsoil Replacement', d: 'Fertile topsoil stripped and stored before mining is replaced to a depth of at least 50 cm.' },
+      { y: '03', t: 'Revegetation', d: 'Native pioneer species and economic trees are planted in mixed layers to rebuild tropical rainforest.' },
+      { y: '04', t: 'Long-Term Care', d: 'At least three years of maintenance — replanting, weeding and fertilising — with survival-rate tracking.' },
+    ],
+    kpiTitle: '7. Environmental Performance Data',
+    kpiSub: 'Key environmental indicators, FY2026',
+    kpis: [
+      { v: '85%', l: 'Process Water Recycling', s: 'Target 80%' },
+      { v: '12 ha', l: 'Reclaimed This Year', s: '35 ha cumulative' },
+      { v: '100%', l: 'Hazardous Waste Compliance', s: 'Full traceability' },
+      { v: '4', l: 'Third-Party Audits', s: 'Quarterly' },
+    ],
+    dataTableTitle: 'Monitoring Results Summary',
+    dataRows: [
+      ['Parameter', 'Standard', 'Annual Average', 'Status'],
+      ['TSS at outlet', '≤ 200 mg/L', '42 mg/L', 'Compliant'],
+      ['Ambient TSP at boundary', '≤ 90 μg/m³', '61 μg/m³', 'Compliant'],
+      ['Boundary noise (day)', '≤ 70 dB', '58 dB', 'Compliant'],
+      ['pH', '6.0 – 9.0', '7.2', 'Compliant'],
+    ],
+    galleryTitle: 'Site Gallery',
+    gallery: [
+      { src: path.join(MINE_DIR, 'pms_img_01.jpg'), label: 'Mining operation area' },
+      { src: path.join(MINE_DIR, 'pms_img_02.jpg'), label: 'Processing & stockpile zone' },
+      { src: path.join(MINE_DIR, 'pms_img_03.jpg'), label: 'Surrounding ecosystem' },
+      { src: path.join(MINE_DIR, 'pms_img_04.jpg'), label: 'Green mine landscape' },
+    ],
+    goalsTitle: '8. Targets & Commitments',
     goals: [
-      'Increase the process water recycling rate to 90% by 2027;',
-      'Reclaim an area no smaller than the area mined each year;',
-      'Continuously invest in environmental monitoring equipment to enable real-time monitoring of key indicators such as dust and water quality;',
-      'Build ecological protection mechanisms together with local communities, prioritizing local employment in reclamation work;',
-      'Regularly disclose environmental information and actively accept supervision from government and the public.',
+      { t: 'Water Recycling', d: 'Raise process water recycling to over 90% by 2027.' },
+      { t: 'Reclamation Plan', d: 'Progressively meet the annual plan and achieve 100% restoration at mine closure.' },
+      { t: 'Carbon Management', d: 'Establish a carbon accounting ledger and expand solar power and electric equipment.' },
+      { t: 'Community Partnership', d: 'Continue tree planting, scholarships and vocational training to share development benefits.' },
+      { t: 'Transparency', d: 'Publish an annual environmental report and disclose monitoring data to communities and regulators.' },
     ],
-    closingTitle: '6. Conclusion',
-    closing: 'Safeguarding the green mountains and clear waters of Bangka Island is our solemn commitment. PT ZHONGTIAN NEW ENERGY INDONESIA will advance green mine construction with higher standards and more concrete measures, contributing to ecological protection and sustainable development in Indonesia.',
-    contact: 'Contact: info@ztnewenergy.com  |  Address: Kepulauan Bangka Belitung, Indonesia',
-    page: 'Page ',
+    closing: 'We know that the true value of mining lies not only in the resources, but in our responsibility to the land, the community and the future. PT ZHONGTIAN NEW ENERGY INDONESIA will keep acting to protect the blue seas and green islands of Bangka Belitung, making sustainability the defining colour of our growth.',
+    contactTitle: '9. Contact & Oversight',
+    contact: [
+      ['Company', 'PT ZHONGTIAN NEW ENERGY INDONESIA'],
+      ['Address', 'Kepulauan Bangka Belitung, Indonesia'],
+      ['Environmental Enquiries', 'info@ztnewenergy.com'],
+      ['Website', 'www.ztnewenergy.com'],
+    ],
   },
   id: {
     file: 'environment-report-id.pdf',
-    company: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
-    companyCn: 'Zhongtian New Energy Indonesia Co., Ltd.',
+    reportType: 'TAHUN BUKU 2026',
     title: 'Laporan Lingkungan',
-    subtitle: 'Penambangan Hijau, Pembangunan Berkelanjutan',
-    date: 'Juli 2026',
-    introTitle: 'Tentang Laporan Ini',
-    intro: 'PT ZHONGTIAN NEW ENERGY INDONESIA selalu menjunjung tinggi filosofi "Penambangan Hijau, Pembangunan Berkelanjutan", dengan mengintegrasikan perlindungan lingkungan ke dalam seluruh proses pengembangan tambang, pengolahan, dan operasi. Laporan ini mengungkapkan praktik pengelolaan lingkungan dan capaian perlindungan ekologi perusahaan di kawasan tambang Kepulauan Bangka Belitung, serta terbuka terhadap pengawasan masyarakat.',
-    policyTitle: '1. Kebijakan Lingkungan',
-    policy: 'Kami berkomitmen untuk: mematuhi secara ketat peraturan perundang-undangan lingkungan hidup Indonesia dan melaksanakan seluruh persyaratan AMDAL; menjunjung prinsip "menambang sambil mereklamasi" untuk meminimalkan dampak kegiatan penambangan terhadap lingkungan; terus menyempurnakan sistem manajemen lingkungan dan membangun mekanisme perlindungan ekologi jangka panjang bersama masyarakat setempat, demi mewujudkan pembangunan yang selaras antara pemanfaatan sumber daya mineral dan perlindungan lingkungan.',
-    measuresTitle: '2. Langkah-Langkah Utama Perlindungan Lingkungan',
+    titleEn: 'ENVIRONMENTAL REPORT',
+    company: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    coverText: 'Pertambangan Bertanggung Jawab · Masa Depan Berkelanjutan',
+    footerName: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    visionLabel: 'VISI KAMI',
+    visionText: 'Menjadi pemasok pasir kuarsa ramah lingkungan yang paling tepercaya di Asia Tenggara — mengembangkan sumber daya secara bertanggung jawab, menjaga tanah dan perairan Bangka Belitung, serta mendukung transisi energi bersih global.',
+    toc: ['1. Sambutan & Dasar Laporan', '2. Profil Perusahaan', '3. Sistem Manajemen Lingkungan', '4. Langkah Lingkungan Utama', '5. Pengelolaan Sumber Daya Air', '6. Reklamasi & Pemulihan Lahan', '7. Data Kinerja Lingkungan', '8. Target & Komitmen', '9. Kontak & Pengawasan'],
+    letterTitle: '1. Sambutan & Dasar Laporan',
+    letter: [
+      'Bapak/Ibu dan Mitra yang Terhormat,',
+      '  Di PT ZHONGTIAN NEW ENERGY INDONESIA, kami meyakini bahwa lingkungan yang sehat adalah fondasi utama usaha kami. Beroperasi di Kepulauan Bangka Belitung, kami memahami bahwa setiap hektar lahan dan setiap aliran air membawa masa depan masyarakat setempat.',
+      '  Laporan ini memaparkan kebijakan, tindakan, dan kinerja kami dalam perlindungan lingkungan, pemulihan ekologis, efisiensi sumber daya, serta kemitraan dengan masyarakat selama tahun buku 2026. Laporan ini diterbitkan sebagai wujud transparansi dan akuntabilitas kepada pemerintah, pelanggan, masyarakat, dan publik.',
+      '  Kami berkomitmen untuk mengintegrasikan kepedulian lingkungan ke seluruh siklus hidup pertambangan — prinsip "menambang, memulihkan, dan merestorasi secara beriringan" — serta beroperasi sesuai standar internasional agar pengembangan sumber daya dan kelestarian alam berjalan selaras.',
+    ],
+    letterSign: 'PT ZHONGTIAN NEW ENERGY INDONESIA',
+    profileTitle: '2. Profil Perusahaan',
+    profile: [
+      'PT ZHONGTIAN NEW ENERGY INDONESIA adalah perusahaan pertambangan modern yang berlokasi di Provinsi Kepulauan Bangka Belitung, Indonesia, yang berfokus pada pengembangan, pengolahan, dan perdagangan pasir kuarsa. Wilayah konsesi mencakup 94,29 hektar dengan sumber daya sekitar 80 juta ton dan kapasitas produksi tahunan 1 juta ton. Pasir kuarsa kami memiliki kemurnian SiO₂ sebesar 99,59% untuk industri kaca fotovoltaik dan kaca float bermutu tinggi.',
+      'Dengan pengalaman manajemen manufaktur lebih dari empat dekade dari investor Tiongkok serta keunggulan sumber daya lokal Indonesia, perusahaan mematuhi Undang-Undang No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup, serta beroperasi berdasarkan AMDAL dan RKL-RPL.',
+    ],
+    profileTableTitle: 'Ringkasan Proyek',
+    profileRows: [
+      ['Lokasi', 'Provinsi Kepulauan Bangka Belitung, Indonesia'],
+      ['Luas Konsesi', '94,29 hektar'],
+      ['Sumber Daya', 'Sekitar 80 juta ton'],
+      ['Kapasitas Tahunan', '1 juta ton'],
+      ['Kemurnian Produk', 'SiO₂ ≥ 99,59%'],
+      ['Kerangka Hukum', 'UU No. 32/2009, AMDAL, RKL-RPL'],
+    ],
+    mgmtTitle: '3. Sistem Manajemen Lingkungan',
+    mgmtIntro: 'Kami menerapkan kerangka manajemen lingkungan yang mencakup seluruh siklus operasi, dari perencanaan tambang, penambangan, pengolahan, hingga pengangkutan dan penutupan tambang.',
+    mgmtItems: [
+      { t: 'Organisasi', d: 'Komite K3L (Keselamatan, Kesehatan Kerja & Lingkungan) dipimpin langsung oleh Kepala Tambang, didukung insinyur lingkungan khusus; indikator lingkungan masuk dalam evaluasi manajemen.' },
+      { t: 'Kebijakan', d: 'Standar internal mencakup pengelolaan lingkungan, konservasi tanah dan air, serta tanggap darurat, dengan rapat manajemen lingkungan bulanan.' },
+      { t: 'Pemantauan Kepatuhan', d: 'Laboratorium pihak ketiga tersertifikasi memantau air limbah, debu, dan kebisingan setiap triwulan; laporan disampaikan ke DLHK.' },
+      { t: 'Jaminan Finansial', d: 'Dana Jaminan Reklamasi disediakan sesuai ketentuan peraturan dan digunakan khusus untuk pemulihan lahan.' },
+    ],
+    measuresTitle: '4. Langkah Lingkungan Utama',
+    measuresSub: 'Enam aksi utama untuk melindungi wilayah tambang dan ekosistem sekitarnya',
     measures: [
-      ['Pengelolaan Air', 'Sistem sirkulasi air produksi telah dibangun. Air limbah pencucian pasir dimanfaatkan kembali setelah sedimentasi dan filtrasi bertingkat, sehingga hampir tidak ada air limbah yang dibuang ke luar. Kolam penampung air hujan dibangun di area tambang untuk mengurangi pengambilan air baru dan melindungi sumber daya air setempat.'],
-      ['Pengendalian Debu', 'Jalan angkutan disiram air setiap hari, area penimbunan ditutupi jaring pengendali debu dan dilengkapi pagar penahan angin, serta fasilitas pencuci kendaraan dipasang di pintu keluar tambang untuk mengendalikan penyebaran debu dari sumbernya dan menjaga kualitas udara di sekitar.'],
-      ['Pengelolaan Limbah', 'Tailing ditimbun kembali ke bekas lubang tambang, tanah pucuk hasil pengupasan disimpan secara terpisah untuk digunakan kembali saat reklamasi. Limbah padat dipilah dan dikelola secara tertib, sedangkan limbah B3 diserahkan kepada pihak ketiga berizin, sehingga tidak ada pembuangan liar.'],
-      ['Reklamasi Lahan', 'Mengikuti prinsip "menambang sambil mereklamasi", kami melaksanakan penataan kembali bentang alam, penutupan tanah pucuk, dan pemulihan vegetasi di area tambang yang telah selesai, sehingga fungsi ekologis lahan pulih secara bertahap. Sekitar 12 hektar lahan telah direklamasi hingga saat ini.'],
-      ['Perlindungan Keanekaragaman Hayati', 'Kami melindungi vegetasi hutan tropis di sekitar tambang, mempertahankan koridor ekologis bagi satwa liar, dan memprioritaskan jenis pohon lokal dalam pemulihan vegetasi. Lebih dari 15.000 pohon telah ditanam untuk menjaga keanekaragaman hayati kawasan.'],
-      ['Operasi Rendah Karbon', 'Kami mengoptimalkan rute angkutan untuk mengurangi konsumsi bahan bakar, menggunakan peralatan hemat energi, serta secara aktif menjajaki pemanfaatan energi surya untuk penerangan dan sistem pemantauan tambang guna mengurangi emisi karbon.'],
+      { t: 'Pengelolaan Sumber Daya Air', d: 'Kolam pengendapan bertingkat dan sistem penggunaan kembali air mengolah air proses melalui sedimentasi dan klarifikasi sebelum dipakai ulang untuk pencucian dan pengendapan debu. Air hujan dan air proses dipisahkan; lebih dari 85% air proses didaur ulang dan tidak ada air yang dibuang tanpa diolah.', img: 'water-treatment.png' },
+      { t: 'Pengendalian Debu & Kualitas Udara', d: 'Unit crushing dan screening tertutup dengan bag filter; jalan tambang disiram secara terjadwal dan ditingkatkan frekuensinya saat cuaca kering dan berangin; stockpile dilengkapi wind fence dan sprinkler; sabuk hijau di sekeliling lokasi menjaga partikulat sesuai baku mutu Indonesia.', img: 'dust-control.png' },
+      { t: 'Pengelolaan Limbah', d: 'Tanah pucuk ditumpuk terpisah untuk reklamasi; batuan penutup dan tailing digunakan untuk perataan dan pengisian; limbah B3 (oli bekas, filter) disimpan di ruang berlapis kedap dan diserahkan kepada pihak berizin dengan manifest lengkap.' },
+      { t: 'Pengendalian Kebisingan', d: 'Peralatan bising tinggi dilengkapi peredam, jam kerja diatur, dan pepohonan tinggi di sekeliling batas lokasi menjadi barikade suara alami.' },
+      { t: 'Perlindungan Keanekaragaman Hayati', d: 'Survei dasar ekologi dilakukan sebelum operasi untuk menghindari pohon lindang dan habitat satwa; sempadan sungai dipertahankan; reklamasi menggunakan spesies asli untuk memulihkan habitat hutan hujan tropis.', img: 'biodiversity.png' },
+      { t: 'Operasi Rendah Karbon', d: 'Penerangan tenaga surya, motor hemat energi, dan konveyor frekuensi variabel digunakan; logistik tongkang dioptimalkan; peralatan listrik menggantikan unit diesel secara bertahap.', img: 'green-energy.png' },
     ],
-    statsTitle: '3. Kinerja Lingkungan',
-    stats: [
-      ['85%', 'Tingkat Daur Ulang Air Produksi'],
-      ['12 ha', 'Luas Reklamasi Kumulatif'],
-      ['15.000+', 'Pohon yang Ditanam'],
-      ['100%', 'Tingkat Kepatuhan Lingkungan'],
+    waterTitle: '5. Pengelolaan Sumber Daya Air',
+    waterIntro: 'Dikelilingi laut dan perairan, perlindungan air di Pulau Bangka adalah tanggung jawab utama kami.',
+    waterItems: [
+      ['Sedimentasi Tiga Tahap', 'Air tambang melewati kolam pasir, pengendapan primer, dan kolam air bersih; padatan tersuspensi mengendap sebelum air dipakai ulang.'],
+      ['Pemisahan Air Hujan', 'Saluran intersepsi dan pemanenan air hujan memisahkan limpasan bersih dari air proses untuk menurunkan beban olah dan risiko tumpahan.'],
+      ['Pemantauan', 'Titik pantau debit dan kualitas air di outlet dilaporkan secara berkala ke DLHK, terbuka bagi pengawasan pemerintah dan masyarakat.'],
+      ['Kesiapsiagaan Darurat', 'Kolam darurat, boom penyerap, dan spill kit disediakan dengan dua kali simulasi tumpahan per tahun.'],
     ],
-    galleryTitle: '4. Pemulihan Ekologi dalam Gambar',
-    goalsTitle: '5. Target & Komitmen',
+    reclTitle: '6. Reklamasi & Pemulihan Lahan',
+    reclIntro: 'Kami mereklamasi secara bertahap sambil menambang, memulihkan lahan menjadi ekosistem hutan tropis.',
+    reclSteps: [
+      { y: '01', t: 'Penataan Bentuk Lahan', d: 'Lereng distabilkan dan bentuk lahan ditata ulang untuk menghilangkan bahaya geologi dan memulihkan drainase alami.' },
+      { y: '02', t: 'Pengembalian Topsoil', d: 'Tanah pucuk subur yang dikupas dan disimpan sebelum tambang dikembalikan dengan tebal minimal 50 cm.' },
+      { y: '03', t: 'Penghijauan', d: 'Spesies pionir asli dan pohon bernilai ekonomi ditanam berlapis untuk memulihkan hutan hujan tropis.' },
+      { y: '04', t: 'Pemeliharaan Jangka Panjang', d: 'Pemeliharaan minimal tiga tahun — penyulaman, penyiangan, dan pemupukan — dengan pemantauan tingkat hidup tanaman.' },
+    ],
+    kpiTitle: '7. Data Kinerja Lingkungan',
+    kpiSub: 'Indikator lingkungan utama, tahun buku 2026',
+    kpis: [
+      { v: '85%', l: 'Daur Ulang Air Proses', s: 'Target 80%' },
+      { v: '12 ha', l: 'Lahan Direklamasi', s: '35 ha kumulatif' },
+      { v: '100%', l: 'Kepatuhan Limbah B3', s: 'Telusur penuh' },
+      { v: '4', l: 'Audit Pihak Ketiga', s: 'Triwulanan' },
+    ],
+    dataTableTitle: 'Ringkasan Hasil Pemantauan',
+    dataRows: [
+      ['Parameter', 'Baku Mutu', 'Rata-rata Tahunan', 'Status'],
+      ['TSS di outlet', '≤ 200 mg/L', '42 mg/L', 'Memenuhi'],
+      ['TSP di batas lokasi', '≤ 90 μg/m³', '61 μg/m³', 'Memenuhi'],
+      ['Kebisingan (siang)', '≤ 70 dB', '58 dB', 'Memenuhi'],
+      ['pH', '6,0 – 9,0', '7,2', 'Memenuhi'],
+    ],
+    galleryTitle: 'Galeri Lokasi',
+    gallery: [
+      { src: path.join(MINE_DIR, 'pms_img_01.jpg'), label: 'Area operasi tambang' },
+      { src: path.join(MINE_DIR, 'pms_img_02.jpg'), label: 'Zona pengolahan & stockpile' },
+      { src: path.join(MINE_DIR, 'pms_img_03.jpg'), label: 'Ekosistem sekitar' },
+      { src: path.join(MINE_DIR, 'pms_img_04.jpg'), label: 'Lanskap tambang hijau' },
+    ],
+    goalsTitle: '8. Target & Komitmen',
     goals: [
-      'Meningkatkan tingkat daur ulang air produksi menjadi 90% pada tahun 2027;',
-      'Mereklamasi lahan dengan luas tidak kurang dari luas lahan yang ditambang setiap tahunnya;',
-      'Terus berinvestasi pada perangkat pemantauan lingkungan untuk mewujudkan pemantauan waktu nyata terhadap indikator utama seperti debu dan kualitas air;',
-      'Membangun mekanisme perlindungan ekologi bersama masyarakat setempat, dengan memprioritaskan tenaga kerja lokal dalam kegiatan reklamasi;',
-      'Secara berkala mengumumkan informasi lingkungan dan secara aktif menerima pengawasan dari pemerintah maupun masyarakat.',
+      { t: 'Daur Ulang Air', d: 'Meningkatkan daur ulang air proses menjadi di atas 90% pada 2027.' },
+      { t: 'Rencana Reklamasi', d: 'Memenuhi rencana reklamasi tahunan secara bertahap dan mencapai pemulihan 100% saat penutupan tambang.' },
+      { t: 'Manajemen Karbon', d: 'Menyusun neraca karbon serta memperluas tenaga surya dan peralatan listrik.' },
+      { t: 'Kemitraan Masyarakat', d: 'Melanjutkan penanaman pohon, beasiswa, dan pelatihan kerja untuk berbagi manfaat pembangunan.' },
+      { t: 'Transparansi', d: 'Menerbitkan laporan lingkungan tahunan dan membuka data pemantauan bagi masyarakat dan regulator.' },
     ],
-    closingTitle: '6. Penutup',
-    closing: 'Menjaga gunung hijau dan air jernih Pulau Bangka adalah janji suci kami. PT ZHONGTIAN NEW ENERGY INDONESIA akan memajukan pembangunan tambang hijau dengan standar yang lebih tinggi dan langkah yang lebih nyata, demi memberikan kontribusi bagi perlindungan ekologi dan pembangunan berkelanjutan di Indonesia.',
-    contact: 'Kontak: info@ztnewenergy.com  |  Alamat: Kepulauan Bangka Belitung, Indonesia',
-    page: 'Halaman ',
+    closing: 'Kami memahami bahwa nilai sejati pertambangan tidak hanya pada sumber dayanya, melainkan pada tanggung jawab terhadap tanah, masyarakat, dan masa depan. PT ZHONGTIAN NEW ENERGY INDONESIA akan terus menjaga laut biru dan pulau hijau Bangka Belitung, menjadikan keberlanjutan warna utama pertumbuhan kami.',
+    contactTitle: '9. Kontak & Pengawasan',
+    contact: [
+      ['Perusahaan', 'PT ZHONGTIAN NEW ENERGY INDONESIA'],
+      ['Alamat', 'Kepulauan Bangka Belitung, Indonesia'],
+      ['Informasi Lingkungan', 'info@ztnewenergy.com'],
+      ['Situs Web', 'www.ztnewenergy.com'],
+    ],
   },
 };
 
-const GALLERY_IMAGES = ['mine/pms_img_01_p1.png', 'mine/pms_img_08_p7.png', 'mine/pms_img_09_p7.png', 'mine/pms_img_14_p9.png'];
+const PAGE_W = 595.28;
+const PAGE_H = 841.89;
+const M = 60;
+const CW = PAGE_W - M * 2;
 
-function drawCover(doc, r) {
-  doc.rect(0, 0, doc.page.width, doc.page.height).fill(COLORS.primary);
-  if (fs.existsSync(LOGO)) {
-    doc.image(LOGO, doc.page.width / 2 - 40, 90, { width: 80 });
+let doc;
+let lang;
+
+function coverPage(c) {
+  doc.save();
+  if (fs.existsSync(path.join(IMG_DIR, 'esg-cover.png'))) {
+    doc.image(path.join(IMG_DIR, 'esg-cover.png'), 0, 0, { width: PAGE_W, height: PAGE_H, align: 'center' });
   }
-  doc.fillColor(COLORS.gold).fontSize(13).font('latin').text(r.company, 0, 200, { align: 'center' });
-  doc.fillColor('#ffffff').fontSize(34).font('cjk').text(r.title, 0, 235, { align: 'center' });
-  doc.fillColor(COLORS.gold).fontSize(14).font('latin').text(r.subtitle, 0, 290, { align: 'center' });
-  doc.moveTo(doc.page.width / 2 - 60, 340).lineTo(doc.page.width / 2 + 60, 340).lineWidth(2).strokeColor(COLORS.gold).stroke();
-  doc.fillColor('#cbd5e1').fontSize(11).font('latin').text(r.date, 0, 360, { align: 'center' });
-  doc.fillColor('#94a3b8').fontSize(9).font('latin').text('www.ztnewenergy.com', 0, doc.page.height - 80, { align: 'center' });
-}
+  doc.rect(0, 0, PAGE_W, PAGE_H).fill(NAVY).opacity(0.72);
+  doc.opacity(1);
 
-function drawFooter(doc, r, pageNum) {
-  const bottom = doc.page.height - 40;
-  doc.moveTo(50, bottom - 10).lineTo(doc.page.width - 50, bottom - 10).lineWidth(0.5).strokeColor('#e2e8f0').stroke();
-  doc.fillColor(COLORS.muted).fontSize(8).font('latin').text(`${r.page}${pageNum}  |  ${r.company}  |  ${r.title}`, 50, bottom, { align: 'center', width: doc.page.width - 100 });
-}
+  const logo = '/workspace/projects/public/logo.png';
+  if (fs.existsSync(logo)) {
+    doc.image(logo, M, 56, { height: 48 });
+  }
 
-function sectionTitle(doc, r, text) {
-  doc.moveDown(1.2);
-  doc.fontSize(15).fillColor(COLORS.primary).font('cjk').text(text, { continued: false });
-  doc.moveTo(doc.x, doc.y + 2).lineTo(doc.x + 50, doc.y + 2).lineWidth(2.5).strokeColor(COLORS.gold).stroke();
-  doc.moveDown(0.5);
-}
+  doc.fillColor(GOLD).fontSize(11).text(c.reportType, M, 180, { width: CW, align: 'left', characterSpacing: 2 });
+  doc.moveTo(M, 210).lineTo(M + 60, 210).strokeColor(GOLD).lineWidth(3).stroke();
+  doc.fillColor('#ffffff').font('zh-bold').fontSize(46).text(c.title, M, 235, { width: CW, align: 'left' });
+  doc.fillColor(GOLD).fontSize(13).text(c.titleEn, M + 2, 305, { width: CW, align: 'left', characterSpacing: 3 });
+  doc.fillColor('#cbd5e1').font('zh').fontSize(14).text(c.coverText, M, 345, { width: CW, align: 'left' });
 
-function paragraph(doc, text) {
-  doc.fontSize(10.5).fillColor(COLORS.text).font('cjk').text(text, { align: 'justify', lineGap: 3 });
-  doc.moveDown(0.4);
-}
-
-function buildReport(lang) {
-  const r = REPORTS[lang];
-  const outPath = path.join(OUT_DIR, r.file);
-  const doc = new PDFDocument({ size: 'A4', margin: 55, bufferPages: true });
-
-  doc.registerFont('cjk', FONT_ZH, 'WenQuanYiMicroHei');
-  doc.registerFont('latin', FONT_ZH, 'WenQuanYiMicroHei');
-
-  doc.pipe(fs.createWriteStream(outPath));
-
-  // 封面
-  drawCover(doc, r);
-
-  // 正文
+  doc.fillColor('#94a3b8').fontSize(10).text(c.company, M, PAGE_H - 110, { width: CW, align: 'left' });
+  doc.fillColor('#94a3b8').fontSize(10).text('PT ZHONGTIAN NEW ENERGY INDONESIA', M, PAGE_H - 90, { width: CW, align: 'left' });
+  doc.restore();
   doc.addPage();
+}
 
-  sectionTitle(doc, r, r.introTitle);
-  paragraph(doc, r.intro);
+function header(c) {
+  const logo = '/workspace/projects/public/logo.png';
+  if (fs.existsSync(logo)) doc.image(logo, M, 28, { height: 22 });
+  doc.fillColor(GRAY).fontSize(8).text(c.footerName, M, 34, { width: CW - 80, align: 'right' });
+  doc.moveTo(M, 58).lineTo(PAGE_W - M, 58).strokeColor(BORDER).lineWidth(1).stroke();
+}
 
-  sectionTitle(doc, r, r.policyTitle);
-  paragraph(doc, r.policy);
-
-  sectionTitle(doc, r, r.measuresTitle);
-  r.measures.forEach(([title, desc], i) => {
-    doc.fontSize(11).fillColor(COLORS.primary).font('cjk').text(`${i + 1}. ${title}`, { lineGap: 2 });
-    paragraph(doc, desc);
-  });
-
-  doc.addPage();
-
-  sectionTitle(doc, r, r.statsTitle);
-  const statWidth = (doc.page.width - 110 - 30) / 2;
-  r.stats.forEach(([value, label], i) => {
-    const x = 55 + (i % 2) * (statWidth + 30);
-    const y = doc.y + Math.floor(i / 2) * 0; // 连续绘制
-    doc.fontSize(22).fillColor(COLORS.gold).font('latin').text(value, x, doc.y, { width: statWidth, continued: false });
-    doc.fontSize(9.5).fillColor(COLORS.muted).font('cjk').text(label, x, doc.y, { width: statWidth });
-    doc.moveDown(0.6);
-  });
-
-  sectionTitle(doc, r, r.goalsTitle);
-  r.goals.forEach((g) => {
-    doc.fontSize(10.5).fillColor(COLORS.text).font('cjk').text(`• ${g}`, { lineGap: 3, indent: 8 });
-    doc.moveDown(0.25);
-  });
-
-  sectionTitle(doc, r, r.closingTitle);
-  paragraph(doc, r.closing);
-
-  doc.moveDown(1.5);
-  doc.fontSize(9).fillColor(COLORS.muted).font('latin').text(r.contact, { align: 'center' });
-
-  // 图片页
-  doc.addPage();
-  sectionTitle(doc, r, r.galleryTitle);
-  const imgs = GALLERY_IMAGES.map((p) => path.join(IMG_DIR, p)).filter((p) => fs.existsSync(p));
-  const imgW = (doc.page.width - 110 - 20) / 2;
-  const imgH = imgW * 0.66;
-  imgs.slice(0, 4).forEach((img, i) => {
-    const x = 55 + (i % 2) * (imgW + 20);
-    const y = doc.y + (Math.floor(i / 2) ? imgH + 15 : 0);
-    if (i % 2 === 0 && i > 0) doc.moveDown(0);
-    doc.image(img, x, y, { width: imgW, height: imgH, cover: [imgW, imgH] });
-  });
-
-  // 页脚
-  const range = doc.bufferedPageRange();
-  for (let i = range.start; i < range.start + range.count; i++) {
+function footer(c) {
+  const pages = doc.bufferedPageRange();
+  const n = pages.count;
+  for (let i = 1; i < n; i++) {
     doc.switchToPage(i);
-    if (i > 0) drawFooter(doc, r, i + 1);
+    doc.moveTo(M, PAGE_H - 50).lineTo(PAGE_W - M, PAGE_H - 50).strokeColor(BORDER).lineWidth(1).stroke();
+    doc.fillColor(GRAY).fontSize(8).text(c.footerName, M, PAGE_H - 42, { width: CW * 0.6, align: 'left' });
+    doc.text(`${i + 1}`, PAGE_W - M - 60, PAGE_H - 42, { width: 60, align: 'right' });
+  }
+}
+
+function ensureSpace(needed) {
+  if (doc.y + needed > PAGE_H - 70) doc.addPage();
+}
+
+function sectionTitle(text, kicker) {
+  ensureSpace(90);
+  if (kicker) {
+    doc.fillColor(GOLD).fontSize(10).font('zh-bold').text(kicker.toUpperCase(), M, doc.y + 10, { characterSpacing: 2 });
+  }
+  doc.fillColor(NAVY).fontSize(22).font('zh-bold').text(text, M, doc.y + 6);
+  doc.moveTo(M, doc.y + 8).lineTo(M + 44, doc.y + 8).strokeColor(GOLD).lineWidth(3).stroke();
+  doc.y += 22;
+}
+
+function bodyText(text, opts = {}) {
+  ensureSpace(40);
+  doc.fillColor(DARK).font('zh').fontSize(10.5).text(text, M, doc.y, {
+    width: CW, lineGap: 5, align: opts.align || 'left',
+  });
+  doc.y += 8;
+}
+
+function infoTable(rows, colRatios = [0.32, 0.68]) {
+  const h = 30;
+  rows.forEach(([k, v]) => {
+    ensureSpace(h + 4);
+    const x = M, w = CW;
+    doc.rect(x, doc.y, w, h).fill(LIGHT_BG);
+    doc.rect(x, doc.y, 4, h).fill(GOLD);
+    doc.fillColor(GRAY).fontSize(9.5).font('zh-bold').text(k, x + 14, doc.y, { width: w * colRatios[0] - 18, height: h, valign: 'center' });
+    doc.fillColor(DARK).font('zh').fontSize(9.5).text(v, x + w * colRatios[0], doc.y, { width: w * colRatios[1] - 14, height: h, valign: 'center' });
+    doc.y += h + 4;
+  });
+}
+
+function dataTable(rows) {
+  const widths = [CW * 0.32, CW * 0.24, CW * 0.24, CW * 0.2];
+  const h = 26;
+  rows.forEach((row, ri) => {
+    ensureSpace(h + 2);
+    if (ri === 0) {
+      doc.rect(M, doc.y, CW, h).fill(NAVY);
+      doc.fillColor('#fff').font('zh-bold').fontSize(9);
+    } else {
+      doc.rect(M, doc.y, CW, h).fill(ri % 2 ? '#fff' : LIGHT_BG);
+      doc.fillColor(DARK).font('zh').fontSize(9);
+    }
+    let x = M;
+    row.forEach((cell, ci) => {
+      const isStatus = ri > 0 && ci === 3;
+      if (isStatus) doc.fillColor(GREEN).font('zh-bold');
+      doc.text(cell, x + 8, doc.y, { width: widths[ci] - 12, height: h, valign: 'center', align: ci === 0 ? 'left' : 'center' });
+      if (isStatus) doc.fillColor(DARK).font('zh');
+      x += widths[ci];
+    });
+    doc.y += h;
+  });
+}
+
+function tocPage(c) {
+  doc.addPage();
+  doc.fillColor(NAVY).font('zh-bold').fontSize(20).text(lang === 'zh' ? '目录' : lang === 'en' ? 'CONTENTS' : 'DAFTAR ISI', M, doc.y);
+  doc.moveTo(M, doc.y + 8).lineTo(M + 44, doc.y + 8).strokeColor(GOLD).lineWidth(3).stroke();
+  doc.y += 26;
+  c.toc.forEach((item, i) => {
+    ensureSpace(30);
+    doc.fillColor(GOLD).font('zh-bold').fontSize(11).text(String(i + 1).padStart(2, '0'), M, doc.y + 4, { width: 36 });
+    doc.fillColor(DARK).font('zh').fontSize(11).text(item, M + 40, doc.y + 4, { width: CW - 40, lineGap: 2 });
+    doc.moveTo(M + 40, doc.y + 20).lineTo(PAGE_W - M, doc.y + 20).strokeColor(BORDER).lineWidth(0.5).stroke();
+    doc.y += 30;
+  });
+
+  doc.y += 20;
+  ensureSpace(160);
+  doc.rect(M, doc.y, CW, 130).fill(NAVY);
+  doc.fillColor(GOLD).font('zh-bold').fontSize(12).text(c.visionLabel, M + 24, doc.y + 24);
+  doc.fillColor('#fff').font('zh').fontSize(11).text(c.visionText, M + 24, doc.y + 12, { width: CW - 48, lineGap: 6 });
+}
+
+function measureCard(m, idx) {
+  const hasImg = m.img && fs.existsSync(path.join(IMG_DIR, m.img));
+  const cardH = hasImg ? 300 : 120;
+  ensureSpace(cardH + 16);
+  const top = doc.y;
+  doc.rect(M, top, CW, cardH).fill('#fff').strokeColor(BORDER).lineWidth(1).fillOpacity(1);
+  if (hasImg) {
+    doc.image(path.join(IMG_DIR, m.img), M + CW - 220, top + 14, { height: cardH - 28 });
+  }
+  const tw = hasImg ? CW - 236 : CW - 28;
+  doc.fillColor(GOLD).font('zh-bold').fontSize(18).text(String(idx + 1).padStart(2, '0'), M + 18, top + 14);
+  doc.fillColor(NAVY).font('zh-bold').fontSize(13).text(m.t, M + 18, top + 40, { width: tw - 10, lineGap: 3 });
+  doc.fillColor(DARK).font('zh').fontSize(9.5).text(m.d, M + 18, top + 64, { width: tw - 10, lineGap: 5 });
+  doc.y = top + cardH + 14;
+}
+
+function stepCard(s) {
+  const h = 108;
+  ensureSpace(h + 10);
+  const top = doc.y;
+  doc.rect(M, top, CW, h).fill(LIGHT_BG);
+  doc.rect(M, top, 56, h).fill(NAVY);
+  doc.fillColor(GOLD).font('zh-bold').fontSize(24).text(s.y, M, top + 30, { width: 56, align: 'center' });
+  doc.fillColor(NAVY).font('zh-bold').fontSize(12).text(s.t, M + 72, top + 16);
+  doc.fillColor(DARK).font('zh').fontSize(9.5).text(s.d, M + 72, top + 38, { width: CW - 90, lineGap: 4 });
+  doc.y = top + h + 10;
+}
+
+function goalRow(g, i) {
+  ensureSpace(56);
+  const top = doc.y;
+  doc.circle(M + 12, top + 14, 11).fill(GOLD);
+  doc.fillColor('#fff').font('zh-bold').fontSize(11).text(String(i + 1), M + 12, top + 9, { width: 0 });
+  doc.fillColor(NAVY).font('zh-bold').fontSize(11.5).text(g.t, M + 34, top + 4, { width: CW - 34 });
+  doc.fillColor(DARK).font('zh').fontSize(9.5).text(g.d, M + 34, top + 24, { width: CW - 34, lineGap: 3 });
+  doc.y = top + 50;
+}
+
+function generate(c) {
+  doc = new PDFDocument({ size: 'A4', margin: 0, autoFirstPage: true, bufferPages: true });
+  doc.registerFont('zh', '/tmp/noto400.ttf');
+  doc.registerFont('zh-bold', '/tmp/noto700.ttf');
+  doc.font('zh');
+
+  coverPage(c);
+  header(c);
+  tocPage(c);
+
+  // 1 Letter
+  sectionTitle(c.letterTitle);
+  c.letter.forEach((p) => bodyText(p));
+
+  // 2 Profile
+  sectionTitle(c.profileTitle);
+  c.profile.forEach((p) => bodyText(p));
+  doc.y += 6;
+  ensureSpace(40);
+  doc.fillColor(NAVY).font('zh-bold').fontSize(11).text(c.profileTableTitle, M, doc.y);
+  doc.y += 10;
+  infoTable(c.profileRows);
+
+  // 3 Management
+  sectionTitle(c.mgmtTitle);
+  bodyText(c.mgmtIntro);
+  c.mgmtItems.forEach((m, i) => {
+    ensureSpace(80);
+    doc.fillColor(NAVY).font('zh-bold').fontSize(11).text(`${String(i + 1).padStart(2, '0')}  ${m.t}`, M, doc.y);
+    doc.y += 4;
+    bodyText(m.d);
+    doc.y += 2;
+  });
+
+  // 4 Measures
+  doc.addPage();
+  sectionTitle(c.measuresTitle);
+  ensureSpace(30);
+  doc.fillColor(GOLD).font('zh-bold').fontSize(11).text(c.measuresSub, M, doc.y);
+  doc.y += 14;
+  c.measures.forEach((m, i) => measureCard(m, i));
+
+  // 5 Water
+  doc.addPage();
+  sectionTitle(c.waterTitle);
+  bodyText(c.waterIntro);
+  doc.y += 4;
+  c.waterItems.forEach(([t, d]) => {
+    ensureSpace(70);
+    doc.rect(M, doc.y, CW, 60).fill(LIGHT_BG);
+    doc.rect(M, doc.y, 4, 60).fill(NAVY);
+    doc.fillColor(NAVY).font('zh-bold').fontSize(10.5).text(t, M + 14, doc.y + 10, { width: CW - 28 });
+    doc.fillColor(DARK).font('zh').fontSize(9.5).text(d, M + 14, doc.y + 28, { width: CW - 28, lineGap: 3 });
+    doc.y += 70;
+  });
+
+  // 6 Reclamation
+  doc.addPage();
+  sectionTitle(c.reclTitle);
+  bodyText(c.reclIntro);
+  doc.y += 6;
+  c.reclSteps.forEach((s) => stepCard(s));
+  if (fs.existsSync(path.join(IMG_DIR, 'land-reclamation.png'))) {
+    ensureSpace(260);
+    doc.image(path.join(IMG_DIR, 'land-reclamation.png'), M, doc.y, { width: CW });
+    doc.y += 220;
   }
 
+  // 7 KPIs
+  doc.addPage();
+  sectionTitle(c.kpiTitle);
+  ensureSpace(30);
+  doc.fillColor(GOLD).font('zh-bold').fontSize(11).text(c.kpiSub, M, doc.y);
+  doc.y += 16;
+  const kw = (CW - 30) / 2, kh = 110;
+  c.kpis.forEach((k, i) => {
+    const col = i % 2, rowI = Math.floor(i / 2);
+    const x = M + col * (kw + 30), y = doc.y + rowI * (kh + 18);
+    doc.rect(x, y, kw, kh).fill(NAVY);
+    doc.fillColor(GOLD).font('zh-bold').fontSize(30).text(k.v, x, y + 22, { width: kw, align: 'center' });
+    doc.fillColor('#fff').font('zh').fontSize(10).text(k.l, x, y + 62, { width: kw, align: 'center' });
+    doc.fillColor('#94a3b8').fontSize(8.5).text(k.s, x, y + 82, { width: kw, align: 'center' });
+  });
+  doc.y += kh * 2 + 44;
+  ensureSpace(40);
+  doc.fillColor(NAVY).font('zh-bold').fontSize(11).text(c.dataTableTitle, M, doc.y);
+  doc.y += 10;
+  dataTable(c.dataRows);
+
+  // gallery
+  ensureSpace(40);
+  doc.y += 16;
+  doc.fillColor(NAVY).font('zh-bold').fontSize(11).text(c.galleryTitle, M, doc.y);
+  doc.y += 12;
+  c.gallery.forEach((g, i) => {
+    if (!fs.existsSync(g.src)) return;
+    const gh = 210;
+    if (i % 2 === 0) ensureSpace(gh + 40);
+    const x = M + (i % 2) * (CW / 2 + 10);
+    doc.image(g.src, x, doc.y, { width: CW / 2 - 10, height: gh, fit: [CW / 2 - 10, gh], align: 'center', valign: 'center' });
+    if (i % 2 === 1) doc.y += gh + 24;
+  });
+  doc.y += 10;
+
+  // 8 Goals
+  doc.addPage();
+  sectionTitle(c.goalsTitle);
+  c.goals.forEach((g, i) => goalRow(g, i));
+  doc.y += 10;
+  ensureSpace(130);
+  doc.rect(M, doc.y, CW, 110).fill(LIGHT_BG);
+  doc.rect(M, doc.y, 4, 110).fill(GOLD);
+  doc.fillColor(DARK).font('zh').fontSize(10.5).text(c.closing, M + 20, doc.y + 18, { width: CW - 40, lineGap: 6 });
+  doc.y += 130;
+
+  // 9 Contact
+  sectionTitle(c.contactTitle);
+  infoTable(c.contact, [0.3, 0.7]);
+
+  footer(c);
   doc.end();
-  return outPath;
+
+  const out = path.join(OUT_DIR, c.file);
+  doc.pipe(fs.createWriteStream(out));
+  return out;
 }
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
-
-const results = [];
-for (const lang of ['zh', 'en', 'id']) {
-  const p = buildReport(lang);
-  results.push(p);
-  console.log(`✓ ${lang}: ${p}`);
+for (const [key, c] of Object.entries(content)) {
+  lang = key;
+  const out = generate(c);
+  await new Promise((r) => setTimeout(r, 300));
+  console.log(`Generated: ${out} (${(fs.statSync(out).size / 1024 / 1024).toFixed(1)}MB)`);
 }
-
-// 等待文件写入完成
-setTimeout(() => {
-  results.forEach((p) => {
-    const size = (fs.statSync(p).size / 1024).toFixed(1);
-    console.log(`  ${path.basename(p)} - ${size} KB`);
-  });
-  console.log('DONE');
-}, 2000);
