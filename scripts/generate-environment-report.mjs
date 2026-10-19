@@ -60,8 +60,8 @@ const WASH = {
 
 // 皮带输送与码头装船实拍（低碳节能运营）
 const BELT = {
-  shore: `${OPT_IMG}/belt-311.jpg`,   // 海边码头连续装船作业
-  barge: `${OPT_IMG}/belt-312.jpg`,   // 皮带输送系统装驳船
+  barge: `${OPT_IMG}/wash-310.jpg`,   // BIL-5 运砂驳船 + 码头输送桁架（横）
+  shore: `${OPT_IMG}/wash-309.jpg`,   // 海边码头装卸作业：装载机/卡车/矿砂堆（竖）
 };
 
 // 勿里洞生态图片
@@ -511,15 +511,14 @@ function pillarsPages(doc, t, startPage) {
   addPage(doc);
   header(doc, t);
   y = sectionTitle(doc, t, t.pillars[5][0], 55);
-  framedImage(doc, BELT.barge, M, y, CW, 225);
-  caption(doc, t, 4, M, y + 231, CW);
-  y += 252;
-  framedImage(doc, BELT.shore, M, y, CW, 185);
-  caption(doc, t, 5, M, y + 191, CW);
-  y += 212;
-  doc.font('bold').fontSize(12).fillColor(NAVY).text(t.beltTitle, M, y);
-  y += 18;
-  bodyText(doc, t.beltBody, M, y, CW, 9.5, INK, 15);
+  framedImage(doc, BELT.barge, M, y, CW, 215);
+  caption(doc, t, 4, M, y + 221, CW);
+  y += 242;
+  const bw = (CW - 14) / 2;
+  framedImage(doc, BELT.shore, M, y, bw, 235);
+  caption(doc, t, 5, M, y + 241, bw);
+  doc.font('bold').fontSize(12).fillColor(NAVY).text(t.beltTitle, M + bw + 14, y + 4, { width: bw });
+  bodyText(doc, t.beltBody, M + bw + 14, y + 24, bw, 9.5, INK, 15);
   footer(doc, t, pageNo);
 
   // 措施 4-6
@@ -544,7 +543,8 @@ function pillarsPages(doc, t, startPage) {
   header(doc, t);
   y = 55;
   const g = 14, gw = (CW - g) / 2, gh = 235;
-  const infos = [INFOGRAPHICS.dust, INFOGRAPHICS.bio, INFOGRAPHICS.lowcarbon, INFOGRAPHICS.reclam];
+  // 实拍：粉尘=厂房分选设备、生多=矿区坡道植被、低碳=码头皮带装船、复垦=矿砂与土地
+  const infos = ['images/mine/pms_img_12_p8.jpeg', 'images/mine/pms_img_10_p7.jpeg', 'images/mine/pms_img_07_p6.jpeg', 'images/mine/pms_img_06_p5.jpeg'];
   const labels = [t.pillars[1][0], t.pillars[4][0], t.pillars[5][0], t.pillars[3][0]];
   infos.forEach((img, i) => {
     const gx = M + (i % 2) * (gw + g);
@@ -574,9 +574,9 @@ function reclamationPage(doc, t, pageNo) {
     }
   });
   y += 96;
-  // 两张配图：复垦示意图 + 现场照片
+  // 两张配图：矿区地貌 + 复垦现场照片
   const hw = (CW - 14) / 2;
-  framedImage(doc, INFOGRAPHICS.reclam, M, y, hw, 200);
+  framedImage(doc, 'images/mine/pms_img_13_p8.jpeg', M, y, hw, 200);
   framedImage(doc, SECTION_IMGS[4], M + hw + 14, y, hw, 200);
   caption(doc, t, 6, M, y + 206, CW);
   footer(doc, t, pageNo);
