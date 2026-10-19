@@ -83,6 +83,7 @@
     "pdfkit": "^0.20.2",
     "react-dev-inspector": "^2.0.1",
     "shadcn": "latest",
+    "sharp": "^0.35.5",
     "stylelint": "^16.4.0",
     "stylelint-config-standard": "^38.0.0",
     "tailwindcss": "^4",
