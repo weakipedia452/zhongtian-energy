@@ -28,12 +28,19 @@ async function main() {
   for (const f of infos) {
     await optimize(path.join(INFO, f), path.join(OUT, f.replace('.png', '.jpg')), 1400, 82);
   }
-  // 新上传的 5 张水处理实拍
-  const news = fs.readdirSync(ASSETS).filter(f => f.startsWith('微信图片') && f.endsWith('.jpg'));
+  // 水处处理实拍（304-310）
+  const news = fs.readdirSync(ASSETS).filter(f => f.startsWith('微信图片') && /_(30[4-9]|310)_480/.test(f));
   for (const f of news) {
     const id = f.match(/_(\d+)_480/)?.[1] || f;
     await optimize(path.join(ASSETS, f), path.join(OUT, `wash-${id}.jpg`), 1400, 80);
     console.log(`wash-${id}.jpg`);
+  }
+  // 皮带输送/码头装船实拍（311 竖图、312 横图）
+  const belts = fs.readdirSync(ASSETS).filter(f => /_31[12]_480\.(jpg|png)$/i.test(f));
+  for (const f of belts) {
+    const id = f.match(/_(\d+)_480/)?.[1];
+    await optimize(path.join(ASSETS, f), path.join(OUT, `belt-${id}.jpg`), 1600, 80);
+    console.log(`belt-${id}.jpg`);
   }
   // 勿里洞生态图
   const ecos = fs.readdirSync(ECO).filter(f => f.endsWith('.jpg'));

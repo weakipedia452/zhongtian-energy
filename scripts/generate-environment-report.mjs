@@ -58,6 +58,12 @@ const WASH = {
   ],
 };
 
+// 皮带输送与码头装船实拍（低碳节能运营）
+const BELT = {
+  shore: `${OPT_IMG}/belt-311.jpg`,   // 海边码头连续装船作业
+  barge: `${OPT_IMG}/belt-312.jpg`,   // 皮带输送系统装驳船
+};
+
 // 勿里洞生态图片
 const ECO = {
   coast: `${OPT_IMG}/eco-coast.jpg`,
@@ -102,6 +108,10 @@ const DATA = {
     ],
     waterTitle: '四、水资源专项管理',
     waterBody: '矿区所在区域雨量充沛，我们将水资源保护置于污染防治的首位：生产用水循环利用率不低于 85%，仅因蒸发与产品夹带产生少量损耗；生活污水经一体化处理设施达标后用于绿化浇灌；在矿区上下游设置对照监测断面，每月跟踪悬浮物（TSS）与 pH 值变化；并建有 5 万立方米应急沉淀库容，确保极端暴雨工况下无超标外排。',
+    beltTitle: '低碳物流：皮带输送系统',
+    beltBody: '物料运输是矿区燃料消耗与碳排放的主要环节。我们在码头装船作业中采用固定式皮带输送系统，石英砂由厂区经封闭皮带廊直接转运至驳船，以连续化电力驱动替代传统卡车短驳与装载机重复倒运：单船装船效率显著提升，柴油消耗与尾气排放同步下降，并减少了沿海道路扬尘与机械噪声。作业面紧邻海域，输送全程封闭、末端受控落料，杜绝物料撒落入海。',
+    figBelt: '皮带输送系统连续装船作业现场',
+    figShore: '海边码头装运现场',
     reclamTitle: '五、土地复垦与生态恢复',
     reclamIntro: '复垦不是开采结束后的补救，而是贯穿矿山全生命周期的系统工程。',
     steps: [['01', '地形整治'], ['02', '表土回覆'], ['03', '植被重建'], ['04', '长期管护']],
@@ -169,10 +179,14 @@ const DATA = {
       ['Waste Classification', 'Topsoil and waste rock are stockpiled separately for backfilling and reclamation; hazardous waste is stored in dedicated facilities and handled by licensed contractors with full traceability.'],
       ['Land Reclamation', 'Following the principle of "mine and reclaim concurrently", restoration proceeds through land shaping, topsoil replacement, revegetation and long-term maintenance, prioritising native species.'],
       ['Biodiversity', 'Ecological buffer zones are retained around the mining area; off-limit logging and hunting are prohibited, and routine patrols monitor vegetation and wildlife activity.'],
-      ['Low-Carbon Operations', 'High-efficiency processing equipment, optimised haul routes and solar lighting across the open site progressively reduce operational carbon emissions.'],
+      ['Low-Carbon Operations', 'High-efficiency processing equipment and a belt-conveyor logistics system replace repeated truck hauling; solar lighting is deployed across the open site to progressively cut operational carbon emissions.'],
     ],
     waterTitle: '4. Water Resource Management',
     waterBody: 'With abundant rainfall in the region, water protection is our top pollution-control priority: over 85% of process water is recycled, with losses limited to evaporation and product moisture; domestic sewage is treated to standard and reused for irrigation; upstream and downstream monitoring sections track TSS and pH monthly; and an emergency settling capacity of 50,000 m³ prevents uncontrolled discharge even during extreme rainfall.',
+    beltTitle: 'Low-Carbon Logistics: Belt Conveyor System',
+    beltBody: 'Material transport is a major source of fuel use and carbon emissions at a mine. At the coastal jetty, quartz sand is transferred directly onto barges through a fixed, enclosed belt-conveyor system driven continuously by electric power, replacing short-haul trucking and repeated loader handling. Barge loading is faster, while diesel consumption, exhaust emissions, road dust and mechanical noise are all reduced. As the work area sits beside the sea, the fully enclosed conveyor and controlled drop at the discharge point prevent any spillage of material into the water.',
+    figBelt: 'Continuous barge loading via the belt conveyor system',
+    figShore: 'Coastal jetty loading operations',
     reclamTitle: '5. Land Reclamation & Ecological Restoration',
     reclamIntro: 'Reclamation is not an afterthought at closure — it is a systematic process running through the entire mine life cycle.',
     steps: [['01', 'Land Shaping'], ['02', 'Topsoil Return'], ['03', 'Revegetation'], ['04', 'Long-Term Care']],
@@ -240,10 +254,14 @@ const DATA = {
       ['Klasifikasi Limbah', 'Tanah pucuk dan batuan penutup ditumpuk terpisah untuk backfill dan reklamasi; limbah B3 disimpan di fasilitas khusus dan dikelola pihak berizin dengan penelusuran penuh.'],
       ['Reklamasi Lahan', 'Sesuai prinsip "menambang sambil mereklamasi", pemulihan dilakukan melalui penataan lahan, pengembalian tanah pucuk, revegetasi, dan pemeliharaan jangka panjang dengan spesies lokal.'],
       ['Keanekaragaman Hayati', 'Zona penyangga ekologis dipertahankan; penebangan dan perburuan liar dilarang, dan patroli rutin memantau vegetasi serta aktivitas satwa.'],
-      ['Operasi Rendah Karbon', 'Peralatan hemat energi, rute angkut yang dioptimalkan, dan penerangan tenaga surya secara bertahap menurunkan emisi karbon operasional.'],
+      ['Operasi Rendah Karbon', 'Peralatan hemat energi dan sistem logistik sabuk konveyor menggantikan angkut truk berulang; penerangan tenaga surya secara bertahap menurunkan emisi karbon operasional.'],
     ],
     waterTitle: '4. Pengelolaan Sumber Daya Air',
     waterBody: 'Dengan curah hujan yang tinggi, perlindungan air menjadi prioritas utama: lebih dari 85% air proses didaur ulang, kehilangan hanya melalui penguapan dan kandungan produk; air limbah domestik diolah hingga memenuhi baku mutu dan digunakan untuk penyiraman tanaman; penampang pemantauan hulu-hilir melacak TSS dan pH setiap bulan; serta kapasitas pengendapan darurat 50.000 m³ mencegah limpasan tidak terkendali bahkan saat hujan ekstrem.',
+    beltTitle: 'Logistik Rendah Karbon: Sistem Sabuk Konveyor',
+    beltBody: 'Pengangkutan material merupakan sumber utama konsumsi bahan bakar dan emisi karbon di tambang. Di dermaga pesisir, kuarsa ditransfer langsung ke tongkang melalui sistem sabuk konveyor tetap yang tertutup dan digerakkan secara terus-menerus oleh tenaga listrik, menggantikan angkut truk jarak pendek serta pemindahan berulang dengan loader. Efisiensi bongkar muat meningkat, sementara konsumsi solar, emisi gas buang, debu jalan, dan kebisingan mekanis menurun. Karena area kerja berada tepat di tepi laut, konveyor yang tertutup penuh dan titik jatuh terkendali mencegah tumpahannya material ke perairan.',
+    figBelt: 'Bongkar muat tongkang terus-menerus dengan sabuk konveyor',
+    figShore: 'Operasi bongkar muat di dermaga pesisir',
     reclamTitle: '5. Reklamasi & Pemulihan Ekosistem',
     reclamIntro: 'Reklamasi bukan langkah setelah tambang tutup, melainkan proses sistematis sepanjang seluruh siklus hidup tambang.',
     steps: [['01', 'Penataan Lahan'], ['02', 'Pengembalian Tanah Pucuk'], ['03', 'Revegetasi'], ['04', 'Pemeliharaan Jangka Panjang']],
@@ -488,6 +506,22 @@ function pillarsPages(doc, t, startPage) {
   bodyText(doc, t.waterBody, M, y, CW, 9.5, INK, 15);
   footer(doc, t, pageNo);
 
+  // 低碳皮带输送实拍专题页
+  pageNo++;
+  addPage(doc);
+  header(doc, t);
+  y = sectionTitle(doc, t, t.pillars[5][0], 55);
+  framedImage(doc, BELT.barge, M, y, CW, 225);
+  caption(doc, t, 4, M, y + 231, CW);
+  y += 252;
+  framedImage(doc, BELT.shore, M, y, CW, 185);
+  caption(doc, t, 5, M, y + 191, CW);
+  y += 212;
+  doc.font('bold').fontSize(12).fillColor(NAVY).text(t.beltTitle, M, y);
+  y += 18;
+  bodyText(doc, t.beltBody, M, y, CW, 9.5, INK, 15);
+  footer(doc, t, pageNo);
+
   // 措施 4-6
   pageNo++;
   addPage(doc);
@@ -544,7 +578,7 @@ function reclamationPage(doc, t, pageNo) {
   const hw = (CW - 14) / 2;
   framedImage(doc, INFOGRAPHICS.reclam, M, y, hw, 200);
   framedImage(doc, SECTION_IMGS[4], M + hw + 14, y, hw, 200);
-  caption(doc, t, 4, M, y + 206, CW);
+  caption(doc, t, 6, M, y + 206, CW);
   footer(doc, t, pageNo);
 }
 
@@ -586,7 +620,7 @@ function performancePage(doc, t, pageNo) {
   });
   y += 20;
   framedImage(doc, SECTION_IMGS[5], M, y, CW, 150);
-  caption(doc, t, 5, M, y + 156, CW);
+  caption(doc, t, 7, M, y + 156, CW);
   footer(doc, t, pageNo);
 }
 
@@ -623,7 +657,7 @@ function photoWallPages(doc, t, startPage) {
   let y = sectionTitle(doc, t, t.wallTitle, 55);
   y = bodyText(doc, t.wallSub, M, y, CW, 9.5, GRAY, 14) + 14;
 
-  let figNo = 6; // 1-5 已用于章节配图
+  let figNo = 8; // 1-7 已用于章节配图
   // Page 1: 宽幅 + 2 横
   framedImage(doc, WALL.banners[0], M, y, CW, 235);
   caption(doc, t, figNo++, M, y + 241, CW);
