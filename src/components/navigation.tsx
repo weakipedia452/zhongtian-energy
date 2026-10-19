@@ -30,6 +30,7 @@ export function Navigation() {
     { key: 'products', href: '#products' },
     { key: 'mining', href: '#mining' },
     { key: 'quality', href: '#quality' },
+    { key: 'environment', href: '#environment' },
     { key: 'careers', href: '#careers' },
     { key: 'contact', href: '#contact' },
   ];
