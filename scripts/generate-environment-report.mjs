@@ -47,6 +47,24 @@ const WALL = {
   ],
 };
 
+// 水处理设施实拍（用户现场照片）
+const WASH = {
+  main: `${OPT_IMG}/wash-307.jpg`,   // 沉淀池水体
+  grid: [
+    `${OPT_IMG}/wash-308.jpg`,  // 螺旋溜槽分选设备
+    `${OPT_IMG}/wash-304.jpg`,  // 水力旋流器
+    `${OPT_IMG}/wash-305.jpg`,  // 螺旋分选全景
+    `${OPT_IMG}/wash-306.jpg`,  // 采坑砂层
+  ],
+};
+
+// 勿里洞生态图片
+const ECO = {
+  coast: `${OPT_IMG}/eco-coast.jpg`,
+  lake: `${OPT_IMG}/eco-lake.jpg`,
+  rainforest: `${OPT_IMG}/eco-rainforest.jpg`,
+};
+
 const DATA = {
   zh: {
     coverLabel: '2025 年度环境报告',
@@ -112,6 +130,10 @@ const DATA = {
     contactTitle: '联系与监督',
     contactRows: [['公司名称', 'PT Zhongtian New Energy Indonesia'], ['地址', 'Bangka Belitung Islands, Indonesia'], ['联系邮箱', 'info@ztnewenergy.com'], ['官方网站', 'www.ztnewenergy.com']],
     fig: (n) => `图 ${n} ｜ 矿区实景记录`,
+    figWash: '洗选与水处理设施现场实拍',
+    figEco: (n) => `图 ${n} ｜ 勿里洞生态环境`,
+    ecoWallTitle: '附录：勿里洞生态之美',
+    ecoWallSub: '邦加勿里洞群岛拥有独特的热带雨林、海岸与湖泊生态系统。守护这片生态家园，是我们一切环保工作的出发点。',
     note: '本报告数据统计周期为 2025 年 1 月 1 日至 12 月 31 日，由公司环境管理委员会编制。',
   },
 
@@ -179,6 +201,10 @@ const DATA = {
     contactTitle: 'Contact & Oversight',
     contactRows: [['Company', 'PT Zhongtian New Energy Indonesia'], ['Address', 'Bangka Belitung Islands, Indonesia'], ['Email', 'info@ztnewenergy.com'], ['Website', 'www.ztnewenergy.com']],
     fig: (n) => `Figure ${n} | Site documentation`,
+    figWash: 'On-site photography of washing and water treatment facilities',
+    figEco: (n) => `Figure ${n} | Belitung ecosystem`,
+    ecoWallTitle: 'Appendix: The Ecological Beauty of Belitung',
+    ecoWallSub: 'The Bangka Belitung Islands are home to unique tropical rainforests, coastlines and lake ecosystems. Protecting this ecological home is the starting point of all our environmental work.',
     note: 'Data period: 1 January – 31 December 2025. Prepared by the Environmental Management Committee.',
   },
 
@@ -246,6 +272,10 @@ const DATA = {
     contactTitle: 'Kontak & Pengawasan',
     contactRows: [['Perusahaan', 'PT Zhongtian New Energy Indonesia'], ['Alamat', 'Kepulauan Bangka Belitung, Indonesia'], ['Email', 'info@ztnewenergy.com'], ['Situs web', 'www.ztnewenergy.com']],
     fig: (n) => `Gambar ${n} | Dokumentasi lapangan`,
+    figWash: 'Dokumentasi fasilitas pencucian dan pengolahan air di lokasi',
+    figEco: (n) => `Gambar ${n} | Ekosistem Belitung`,
+    ecoWallTitle: 'Lampiran: Keindahan Ekologi Belitung',
+    ecoWallSub: 'Kepulauan Bangka Belitung memiliki ekosistem hutan hujan tropis, pesisir, dan danau yang unik. Menjaga rumah ekologis ini adalah titik awal dari seluruh upaya lingkungan kami.',
     note: 'Periode data: 1 Januari – 31 Desember 2025. Disusun oleh Komite Pengelolaan Lingkungan.',
   },
 };
@@ -436,17 +466,26 @@ function pillarsPages(doc, t, startPage) {
   });
   footer(doc, t, pageNo);
 
-  // 水管理信息图整页横幅
+  // 水管理实拍专题页：沉淀池主图 + 4 张设施图
   pageNo++;
   addPage(doc);
   header(doc, t);
   y = sectionTitle(doc, t, t.pillars[0][0], 55);
-  framedImage(doc, INFOGRAPHICS.water, M, y, CW, 250);
-  y += 264;
+  framedImage(doc, WASH.main, M, y, CW, 230);
+  caption(doc, t, 3, M, y + 236, CW);
+  y += 258;
+  // 4 张竖图横排
+  const ng = 4, gapI = 12, pw = (CW - gapI * (ng - 1)) / ng, ph = 170;
+  WASH.grid.forEach((img, i) => {
+    framedImage(doc, img, M + i * (pw + gapI), y, pw, ph);
+  });
+  y += ph + 6;
+  doc.font('body').fontSize(8).fillColor(GRAY).text(t.figWash, M, y, { width: CW, align: 'center' });
+  y += 20;
   // 水资源专项
   doc.font('bold').fontSize(12).fillColor(NAVY).text(t.waterTitle, M, y);
-  y += 20;
-  bodyText(doc, t.waterBody, M, y, CW, 10, INK, 16);
+  y += 18;
+  bodyText(doc, t.waterBody, M, y, CW, 9.5, INK, 15);
   footer(doc, t, pageNo);
 
   // 措施 4-6
@@ -505,7 +544,7 @@ function reclamationPage(doc, t, pageNo) {
   const hw = (CW - 14) / 2;
   framedImage(doc, INFOGRAPHICS.reclam, M, y, hw, 200);
   framedImage(doc, SECTION_IMGS[4], M + hw + 14, y, hw, 200);
-  caption(doc, t, 3, M, y + 206, CW);
+  caption(doc, t, 4, M, y + 206, CW);
   footer(doc, t, pageNo);
 }
 
@@ -547,7 +586,7 @@ function performancePage(doc, t, pageNo) {
   });
   y += 20;
   framedImage(doc, SECTION_IMGS[5], M, y, CW, 150);
-  caption(doc, t, 4, M, y + 156, CW);
+  caption(doc, t, 5, M, y + 156, CW);
   footer(doc, t, pageNo);
 }
 
@@ -584,7 +623,7 @@ function photoWallPages(doc, t, startPage) {
   let y = sectionTitle(doc, t, t.wallTitle, 55);
   y = bodyText(doc, t.wallSub, M, y, CW, 9.5, GRAY, 14) + 14;
 
-  let figNo = 5; // 1-4 已用于章节配图
+  let figNo = 6; // 1-5 已用于章节配图
   // Page 1: 宽幅 + 2 横
   framedImage(doc, WALL.banners[0], M, y, CW, 235);
   caption(doc, t, figNo++, M, y + 241, CW);
@@ -598,38 +637,23 @@ function photoWallPages(doc, t, startPage) {
   figNo += 2;
   footer(doc, t, pageNo);
 
-  // Page 2: 3 竖 + 2 横
+  // Page 2: 勿里洞生态之美专题
   pageNo++;
   addPage(doc);
   header(doc, t);
-  y = 60;
-  const vw = (CW - 24) / 3;
-  const vh = 280;
-  for (let i = 0; i < 3; i++) {
-    framedImage(doc, WALL.verticals[i], M + i * (vw + 12), y, vw, vh);
-    caption(doc, t, figNo++, M + i * (vw + 12), y + vh + 6, vw);
-  }
-  y += vh + 26;
-  framedImage(doc, WALL.horizontals[2], M, y, hw, 195);
-  framedImage(doc, WALL.horizontals[3], M + hw + 14, y, hw, 195);
-  caption(doc, t, figNo, M, y + 201, hw);
-  caption(doc, t, figNo + 1, M + hw + 14, y + 201, hw);
+  y = sectionTitle(doc, t, t.ecoWallTitle, 55);
+  y = bodyText(doc, t.ecoWallSub, M, y, CW, 9.5, GRAY, 14) + 14;
+  // 海岸宽幅大图
+  framedImage(doc, ECO.coast, M, y, CW, 235);
+  doc.font('body').fontSize(8).fillColor(GRAY).text(t.figEco(figNo), M, y + 241, { width: CW, align: 'center' });
+  figNo++;
+  y += 262;
+  // 湖泊 + 雨林 双横图
+  framedImage(doc, ECO.lake, M, y, hw, 195);
+  framedImage(doc, ECO.rainforest, M + hw + 14, y, hw, 195);
+  doc.font('body').fontSize(8).fillColor(GRAY).text(t.figEco(figNo), M, y + 201, { width: hw, align: 'center' });
+  doc.font('body').fontSize(8).fillColor(GRAY).text(t.figEco(figNo + 1), M + hw + 14, y + 201, { width: hw, align: 'center' });
   figNo += 2;
-  footer(doc, t, pageNo);
-
-  // Page 3: 第二宽幅 + 2 竖
-  pageNo++;
-  addPage(doc);
-  header(doc, t);
-  y = 60;
-  framedImage(doc, WALL.banners[1], M, y, CW, 220);
-  caption(doc, t, figNo++, M, y + 226, CW);
-  y += 250;
-  const vw2 = (CW - 14) / 2;
-  framedImage(doc, WALL.verticals[3], M, y, vw2, 300);
-  framedImage(doc, WALL.verticals[4], M + vw2 + 14, y, vw2, 300);
-  caption(doc, t, figNo, M, y + 306, vw2);
-  caption(doc, t, figNo + 1, M + vw2 + 14, y + 306, vw2);
   footer(doc, t, pageNo);
   return pageNo + 1;
 }
