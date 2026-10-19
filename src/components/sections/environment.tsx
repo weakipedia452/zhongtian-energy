@@ -30,12 +30,10 @@ const measureIcons = [
 const statsKeys = ['water', 'reclaimed', 'trees', 'compliance'] as const;
 
 const galleryImages = [
-  { src: '/images/mine/pms_img_01_p1.png', alt: 'Mine reclamation site' },
-  { src: '/images/mine/pms_img_03_p2.jpeg', alt: 'Vegetation restoration' },
-  { src: '/images/mine/pms_img_05_p4.jpeg', alt: 'Mining area greenery' },
-  { src: '/images/mine/pms_img_07_p6.jpeg', alt: 'Ecological pond' },
-  { src: '/images/mine/pms_img_10_p7.jpeg', alt: 'Reclaimed land' },
-  { src: '/images/mine/pms_img_15_p9.jpeg', alt: 'Water management facility' },
+  { src: '/images/mine/pms_img_01_p1.png', alt: 'Mine site overview' },
+  { src: '/images/mine/pms_img_08_p7.png', alt: 'Mining area' },
+  { src: '/images/mine/pms_img_09_p7.png', alt: 'Site facilities' },
+  { src: '/images/mine/pms_img_14_p9.png', alt: 'Reclaimed land' },
 ];
 
 const goalKeys = ['1', '2', '3', '4'] as const;
