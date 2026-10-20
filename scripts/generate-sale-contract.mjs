@@ -87,27 +87,38 @@ y = doc.y + 10;
 // 3. Port of loading
 y = clause(3, 'Tanjung Batu Anchorage, Belitung, Indonesia', y);
 
-// 4. Quality 规格表
+// 4. Quality 规格表（居中两列表格，固定行高，避免文字重叠）
+if (y + 120 > FOOT_Y - 24) y = addPage();
 doc.font('Helvetica-Bold').fontSize(10).fillColor(INK).text('4. QUALITY:', M, y, { width: CW });
+y = doc.y + 8;
+
+const tW = 300;                    // 表格总宽
+const tX = M + (CW - tW) / 2;      // 表格水平居中
+const c1 = tW * 0.5;               // 列宽
+const rowH = 18;
+
+doc.font('Helvetica-Bold').fontSize(9.5).fillColor(INK)
+  .text('CONTRACTUAL SPECIFICATION OF SILICA', tX, y, { width: tW, align: 'center' });
 y = doc.y + 4;
-const tblX = M + 220, tblW = CW - 220;
-doc.font('Helvetica').fontSize(9.5).fillColor(INK);
-doc.text('CONTRACTUAL SPECIFICATION OF SILICA', M, y, { width: tblX - M });
-doc.text('PARAMETER', tblX, y, { width: 130 });
-doc.text('GUARANTEED', tblX + 130, y, { width: tblW - 130 });
-y = doc.y + 2;
-doc.moveTo(M, y).lineTo(PAGE_W - M, y).lineWidth(0.5).strokeColor(GRAY).stroke();
-y += 8;
-function row(a, b, c, yy) {
-  doc.text(a, M, yy, { width: tblX - M });
-  doc.text(b, tblX, yy, { width: 130 });
-  doc.text(c, tblX + 130, yy, { width: tblW - 130 });
-  return doc.y + 2;
+
+function tableRow(a, b, yy, bold) {
+  doc.font(bold ? 'Helvetica-Bold' : 'Helvetica').fontSize(9.5).fillColor(INK)
+    .text(a, tX, yy + 4, { width: c1, align: 'center', lineBreak: false })
+    .text(b, tX + c1, yy + 4, { width: tW - c1, align: 'center', lineBreak: false });
+  // 上横线 + 三根竖线
+  doc.moveTo(tX, yy).lineTo(tX + tW, yy).lineWidth(0.5).strokeColor(GRAY).stroke();
+  doc.moveTo(tX, yy).lineTo(tX, yy + rowH).stroke();
+  doc.moveTo(tX + c1, yy).lineTo(tX + c1, yy + rowH).stroke();
+  doc.moveTo(tX + tW, yy).lineTo(tX + tW, yy + rowH).stroke();
+  return yy + rowH;
 }
-y = row('SiO2', '99.5% Min.', '', y);
-y = row('Fe2O3', '0.012% Max.', '', y);
-y = row('H2O (Moisture)', '5.0% Max.', '', y);
-y += 6;
+
+y = tableRow('PARAMETER', 'GUARANTEED', y, true);
+y = tableRow('SiO2', '99.5% Min.', y, false);
+y = tableRow('Fe2O3', '0.012% Max', y, false);
+y = tableRow('H2O (Moisture)', '5.0% Max.', y, false);
+doc.moveTo(tX, y).lineTo(tX + tW, y).lineWidth(0.5).strokeColor(GRAY).stroke(); // 表格底线
+y += 14;
 
 // 5. Price
 y = section(5, 'PRICE', 'RMB 80/MT FOB barge port of Tanjung Batu Anchorage, Belitung, Indonesia', y);
